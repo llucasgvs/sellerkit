@@ -217,8 +217,8 @@ async function loginComGoogle() {
   btns.forEach(b => { b.disabled = true; b.childNodes[1].textContent = ' Aguarde...' })
 
   const redirectTo = params.get('plano') === 'pro'
-    ? `https://www.sellerkit.com.br/app?plano=pro&periodo=${periodoParam}`
-    : 'https://www.sellerkit.com.br/app'
+    ? `${window.location.origin}/app?plano=pro&periodo=${periodoParam}`
+    : `${window.location.origin}/app`
 
   const { error } = await sb.auth.signInWithOAuth({
     provider: 'google',
@@ -253,8 +253,8 @@ async function cadastrar(e) {
     options: {
       data: { nome },
       emailRedirectTo: params.get('plano') === 'pro'
-        ? `https://www.sellerkit.com.br/app?plano=pro&periodo=${periodoParam}`
-        : 'https://www.sellerkit.com.br/app'
+        ? `${window.location.origin}/app?plano=pro&periodo=${periodoParam}`
+        : `${window.location.origin}/app`
     }
   })
 
@@ -313,8 +313,8 @@ async function magicLink() {
     email,
     options: {
       emailRedirectTo: params.get('plano') === 'pro'
-        ? `https://www.sellerkit.com.br/app?plano=pro&periodo=${periodoParam}`
-        : 'https://www.sellerkit.com.br/app'
+        ? `${window.location.origin}/app?plano=pro&periodo=${periodoParam}`
+        : `${window.location.origin}/app`
     }
   })
 
@@ -336,7 +336,7 @@ async function esqueceuSenha() {
     return
   }
   const { error } = await sb.auth.resetPasswordForEmail(email, {
-    redirectTo: 'https://www.sellerkit.com.br/app/reset-senha'
+    redirectTo: `${window.location.origin}/app/reset-senha`
   })
   if (error) {
     showMsg('msg-login', 'error', traduzirErro(error.message))

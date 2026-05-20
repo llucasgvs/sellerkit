@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Minha Cartela — Margem Certa</title>
+<title>Margem Certa — SellerKit</title>
 <meta name="robots" content="noindex, nofollow">
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-3VLXHCCFBS"></script>
 <script>
@@ -19,91 +19,175 @@
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=DM+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
 :root {
-  --green:#00C853; --green-light:#E8FAF0; --green-mid:#00A846;
-  --bg:#FAFAF9; --surface:#FFFFFF; --dark:#0F1410;
-  --text:#1A1F1B; --muted:#6B7A6D; --border:#E4E9E5;
-  --red:#E53E3E; --red-light:#FFF5F5;
-  --font:'Plus Jakarta Sans',sans-serif;
+  /* Brand */
+  --green:#16a34a; --green-mid:#22c55e; --green-light:#dcfce7;
+  --green-xlight:#f0fdf4; --green-dark:#14532d;
+  /* Typography */
+  --font:'Sora',sans-serif; --font-mono:'DM Mono',monospace;
+  /* Radius */
+  --r-sm:6px; --r-md:8px; --r-lg:12px; --r-xl:16px;
+  /* Transition */
+  --t:.18s ease;
+  /* Surfaces */
+  --bg:#f8faf8; --surface:#ffffff; --surface-2:#f1f5f1; --surface-3:#e8f0e8;
+  --border:#d1e0d1; --border-soft:#e4ede4;
+  /* Text */
+  --text:#0f1f0f; --text-1:#0f1f0f; --text-2:#3d5a3d; --text-3:#7a997a; --muted:#7a997a;
+  /* Accent */
+  --accent:#16a34a; --accent-hover:#15803d; --accent-bg:#dcfce7; --accent-text:#14532d;
+  /* Semantic */
+  --red:#dc2626; --red-light:#fee2e2;
+  --warn-bg:#fef9c3; --warn-text:#854d0e;
+  --danger-bg:#fee2e2; --danger-text:#991b1b;
+  /* Sidebar */
+  --sidebar-bg:#ffffff; --sidebar-active-bg:#dcfce7; --sidebar-active-text:#14532d;
+  /* Shadow */
+  --shadow:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.04);
+  /* Compat */
+  --dark:#0f1f0f;
+  --warning:#F59E0B;
 }
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
-html{scroll-behavior:smooth;}
-body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;}
+html,body{height:100%;overflow:hidden;}
+body{font-family:var(--font);background:var(--bg);color:var(--text);}
 
-/* NAV */
-nav{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 20px;position:sticky;top:0;z-index:100;}
-nav .inner{max-width:1140px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;gap:16px;}
-.logo{font-weight:800;font-size:17px;color:var(--text);text-decoration:none;letter-spacing:-.4px;flex-shrink:0;}
-.logo em{color:var(--green);font-style:normal;}
-.nav-right{display:flex;align-items:center;gap:12px;}
+/* MC-TOPBAR ─────────────────────────────────────────── */
+.mc-topbar{background:var(--surface);border-bottom:1px solid var(--border);height:52px;display:flex;align-items:center;padding:0 24px;gap:12px;flex-shrink:0;position:relative;z-index:100;}
+.mc-tool-id{display:flex;align-items:center;gap:10px;flex:1;min-width:0;}
+.mc-tool-icon{width:28px;height:28px;background:var(--green-light);border-radius:var(--r-md);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.mc-tool-name{font-size:14px;font-weight:700;color:var(--text);letter-spacing:-.2px;display:block;}
+.mc-tool-sub{font-size:11px;color:var(--muted);display:block;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.mc-topbar-right{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.topbar-trial{display:none;align-items:center;gap:6px;font-family:var(--font-mono);font-size:11px;color:var(--accent-text);background:var(--accent-bg);border:1px solid var(--border);border-radius:20px;padding:4px 12px;white-space:nowrap;}
+.topbar-trial.show{display:flex;}
+.topbar-trial-dot{width:5px;height:5px;border-radius:50%;background:var(--green);animation:topbar-pulse 2s infinite;}
+@keyframes topbar-pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.btn-assinar-top{font-size:12px;font-weight:700;color:#fff;background:var(--green);border:none;border-radius:8px;padding:6px 14px;cursor:pointer;font-family:var(--font);transition:background .2s;display:none;white-space:nowrap;}
+.btn-assinar-top:hover{background:var(--green-mid);}
+.btn-assinar-top.show{display:block;}
 .nav-plano{font-size:11px;font-weight:700;padding:4px 10px;border-radius:100px;letter-spacing:.3px;}
 .nav-plano.gratuito{background:var(--bg);border:1px solid var(--border);color:var(--muted);}
 .nav-plano.pro{background:var(--green-light);color:var(--green-mid);}
-.nav-user{font-size:13px;color:var(--muted);display:none;}
-.nav-logout{font-size:13px;font-weight:600;color:var(--muted);background:none;border:none;cursor:pointer;font-family:var(--font);transition:color .2s;}
-.nav-logout:hover{color:var(--red);}
+/* Mobile nav hamburger — DEPRECATED (single hub-toggle now) */
+.nav-hamburger{display:none;}
+.nav-mob-menu{display:none;}
+
+/* SIDEBAR ACCOUNT SECTION ───────────────────────────── */
+.hub-account-actions{padding:2px 0;}
+.hub-action-btn{
+  display:flex;align-items:center;gap:9px;
+  width:100%;padding:7px 10px;border-radius:var(--r-md);
+  font-size:12px;font-weight:400;color:var(--text-2);
+  background:none;border:none;cursor:pointer;
+  font-family:var(--font);text-align:left;text-decoration:none;
+  transition:background var(--t),color var(--t);
+}
+.hub-action-btn:hover{background:var(--surface-2);color:var(--text-1);}
+.hub-action-btn.danger{color:#dc4040;}
+.hub-action-btn.danger:hover{background:var(--red-light);color:var(--red);}
+.hub-action-btn .mob-icon{width:22px;height:22px;border-radius:5px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.hub-action-divider{height:1px;background:var(--border-soft);margin:4px 8px;}
 
 /* LAYOUT */
-main{flex:1;max-width:1140px;margin:0 auto;width:100%;padding:32px 20px;}
+main{flex:1;overflow-y:auto;min-height:0;padding:20px 24px;}
 
 /* HEADER */
-.page-header{margin-bottom:28px;}
-.page-header h1{font-size:clamp(22px,4vw,30px);font-weight:800;letter-spacing:-1px;margin-bottom:4px;}
-.page-header p{font-size:14px;color:var(--muted);}
+.page-header{margin-bottom:20px;}
+.page-header h1{font-size:clamp(18px,3vw,22px);font-weight:700;letter-spacing:-.5px;margin-bottom:3px;}
+.page-header p{font-size:13px;color:var(--muted);}
 
 /* STATS */
-.stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:24px;}
-.stat-card{background:var(--surface);border:1.5px solid var(--border);border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;min-width:0;}
-.stat-label{font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.2px;margin-bottom:6px;}
-.stat-value{font-size:24px;font-weight:800;letter-spacing:-1px;line-height:1;}
+.stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px;}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:12px 14px;display:flex;flex-direction:column;min-width:0;box-shadow:var(--shadow);}
+.stat-label{font-size:10px;font-weight:500;color:var(--text-3);letter-spacing:.1px;margin-bottom:8px;}
+.stat-value{font-family:var(--font-mono);font-size:20px;font-weight:500;letter-spacing:-.3px;line-height:1;}
 .stat-value.green{color:var(--green-mid);}
 .stat-value.red{color:var(--red);}
 .stat-sub{font-size:11px;color:var(--muted);margin-top:4px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;width:100%;}
 .stat-health{font-size:11px;font-weight:600;margin-top:6px;line-height:1.4;}
 .stat-health.healthy{color:var(--green-mid);}
-.stat-health.warning{color:#D97706;}
+.stat-health.warning{color:var(--warning);}
 .stat-health.danger{color:var(--red);}
 .stat-margem-card.healthy{border-left:3px solid var(--green)!important;}
-.stat-margem-card.warning{border-left:3px solid #F59E0B!important;}
+.stat-margem-card.warning{border-left:3px solid var(--warning)!important;}
 .stat-margem-card.danger{border-left:3px solid var(--red)!important;}
 .stat-pills{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px;}
 .stat-pill{font-size:10px;font-weight:700;padding:3px 7px;border-radius:20px;}
-.stat-pill.green{background:var(--green-light);color:var(--green-mid);}
-.stat-pill.red{background:var(--red-light);color:var(--red);}
+.stat-pill.green{background:var(--accent-bg);color:var(--accent-text);}
+.stat-pill.red{background:var(--red-light);color:var(--red);font-weight:600;}
+.stat-pill.neutral{background:var(--surface-2);color:var(--text-3);}
 .stat-card-green{border-left:3px solid var(--green)!important;}
 .stat-card-red{border-left:3px solid var(--red)!important;}
 
 /* BANNER PRO */
-.trial-banner{display:none;background:var(--dark);border-radius:16px;padding:20px 22px;margin-bottom:28px;flex-direction:column;gap:14px;}
+.trial-banner{display:none;background:var(--green-light);border:1px solid var(--border-soft);border-radius:16px;padding:20px 22px;margin-bottom:28px;flex-direction:column;gap:14px;}
 .trial-banner-top{display:flex;align-items:flex-start;gap:14px;}
 .trial-banner-icon{width:44px;height:44px;background:rgba(0,200,83,.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
-.trial-banner-title{font-size:15px;font-weight:800;color:#fff;letter-spacing:-.3px;margin-bottom:5px;}
-.trial-banner-sub{font-size:12px;color:rgba(255,255,255,.5);line-height:1.6;}
+.trial-banner-title{font-size:15px;font-weight:700;color:var(--text-1);letter-spacing:-.3px;margin-bottom:5px;}
+.trial-banner-sub{font-size:12px;color:var(--text-3);line-height:1.6;}
 .trial-banner-bottom{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
-.trial-banner-days{font-size:12px;color:rgba(255,255,255,.4);font-weight:500;}
-.trial-banner-days strong{font-weight:700;color:var(--green);}
+.trial-banner-days{font-size:12px;color:var(--text-3);font-weight:500;}
+.trial-banner-days strong{font-weight:700;color:var(--green-mid);}
 .trial-banner.warning .trial-banner-icon{background:rgba(251,191,36,.12);}
-.trial-banner.warning .trial-banner-days strong{color:#FCD34D;}
+.trial-banner.warning .trial-banner-days strong{color:var(--warning);}
 .trial-banner.danger .trial-banner-icon{background:rgba(239,68,68,.12);}
-.trial-banner.danger .trial-banner-days strong{color:#F87171;}
-.trial-banner-cta{background:var(--green);color:#fff;border:none;border-radius:10px;padding:10px 20px;font-size:13px;font-weight:800;cursor:pointer;white-space:nowrap;font-family:var(--font);transition:background .2s;flex-shrink:0;}
+.trial-banner.danger .trial-banner-days strong{color:var(--red);}
+.trial-banner-cta{background:var(--green);color:#fff;border:none;border-radius:var(--r-md);padding:10px 20px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;font-family:var(--font);transition:background var(--t);flex-shrink:0;}
 .trial-banner-cta:hover{background:var(--green-mid);}
-.trial-banner-close{position:absolute;top:12px;right:14px;background:none;border:none;color:rgba(255,255,255,.35);cursor:pointer;font-size:18px;line-height:1;padding:2px 4px;transition:color .15s;}
-.trial-banner-close:hover{color:rgba(255,255,255,.7);}
+.trial-banner-close{position:absolute;top:12px;right:14px;background:none;border:none;color:var(--text-3);cursor:pointer;font-size:18px;line-height:1;padding:2px 4px;transition:color .15s;}
+.trial-banner-close:hover{color:var(--text-1);}
 .trial-banner{position:relative;}
-.pro-banner{background:var(--dark);border-radius:14px;padding:20px;margin-bottom:28px;display:flex;justify-content:space-between;align-items:center;gap:16px;}
-.pro-banner-text h3{color:#fff;font-size:15px;font-weight:800;letter-spacing:-.4px;margin-bottom:4px;}
+.pro-banner{background:var(--dark);border-radius:var(--r-lg);padding:20px;margin-bottom:28px;display:flex;justify-content:space-between;align-items:center;gap:16px;}
+.pro-banner-text h3{color:#fff;font-size:15px;font-weight:700;letter-spacing:-.4px;margin-bottom:4px;}
 .pro-banner-text p{color:rgba(255,255,255,.5);font-size:12px;line-height:1.5;}
-.pro-banner-btn{background:var(--green);color:#fff;border:none;padding:10px 20px;border-radius:10px;font-size:13px;font-weight:800;font-family:var(--font);cursor:pointer;white-space:nowrap;transition:background .2s,transform .15s;flex-shrink:0;}
+.pro-banner-btn{background:var(--green);color:#fff;border:none;padding:10px 20px;border-radius:var(--r-md);font-size:13px;font-weight:700;font-family:var(--font);cursor:pointer;white-space:nowrap;transition:background var(--t);flex-shrink:0;}
 .pro-banner-btn:active{transform:scale(.98);}
 
-/* SECTION HEADERS */
-.section-title{font-size:17px;font-weight:800;letter-spacing:-.5px;margin-bottom:0;}
-.section-subtitle{font-size:12px;color:var(--muted);font-weight:500;margin-top:3px;}
+/* SECTION HEADERS — hidden in app shell (títulos estão nos card headers) */
+.section-header{display:none!important;}
+.section-divider{display:none!important;}
+.page-header{display:none!important;}
+.section-title{font-size:14px;font-weight:700;letter-spacing:-.3px;margin-bottom:0;}
+.section-subtitle{font-size:11px;color:var(--muted);font-weight:500;margin-top:2px;}
+
+/* SK-GRID + SK-CARD ─────────────────────────────────── */
+.sk-grid{display:grid;grid-template-columns:1fr;gap:14px;}
+@media(min-width:900px){.sk-grid{grid-template-columns:390px 1fr;gap:18px;align-items:start;}}
+
+.sk-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;box-shadow:var(--shadow);}
+.sk-card-header{display:flex;align-items:center;justify-content:space-between;padding:11px 16px;border-bottom:1px solid var(--border-soft);background:var(--surface);}
+.sk-card-header.light{background:var(--surface);border-bottom-color:var(--border-soft);}
+.sk-card-title{font-size:12px;font-weight:600;color:var(--text-1);display:flex;align-items:center;gap:8px;letter-spacing:-.1px;}
+.sk-card-title.dark{color:var(--text-1);}
+.sk-card-title svg{opacity:.6;}
+.sk-card-action{font-size:11px;color:var(--text-3);cursor:pointer;border:none;background:none;font-family:var(--font);transition:color var(--t);padding:0;}
+.sk-card-action:hover{color:var(--text-1);}
+.sk-card-action.dark{color:var(--muted);}
+.sk-card-action.dark:hover{color:var(--text);}
+.sk-card-body{padding:16px;}
+
+/* TRIAL BANNER — compact strip ─────────────────────── */
+.trial-banner{background:var(--green-light);border:1px solid var(--border-soft);border-radius:var(--r-md);padding:10px 14px;margin-bottom:14px;flex-direction:row!important;align-items:center!important;gap:10px!important;}
+.trial-banner-top{align-items:center;gap:10px;flex:1;}
+.trial-banner-icon{width:26px;height:26px;border-radius:7px;font-size:13px;flex-shrink:0;}
+.trial-banner-title{font-size:12px;font-weight:700;margin-bottom:0!important;color:var(--text-1);}
+.trial-banner-sub{display:none!important;}
+.trial-banner-bottom{flex-shrink:0;flex-direction:row!important;align-items:center!important;gap:8px!important;}
+.trial-banner-days{font-size:10px;color:var(--text-3);}
+.trial-banner-cta{padding:6px 12px!important;font-size:11px!important;border-radius:7px!important;}
+.trial-banner.warning{background:#FFFBEB;border-color:rgba(245,158,11,.25);}
+.trial-banner.danger{background:#FFF5F5;border-color:rgba(239,68,68,.2);}
+
+/* PRO BANNER — compact ─────────────────────────────── */
+.pro-banner{background:var(--dark);border-radius:var(--r-lg);padding:12px 16px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;gap:12px;}
+.pro-banner-text h3{font-size:12px;font-weight:700;margin-bottom:2px;}
+.pro-banner-text p{font-size:11px;color:rgba(255,255,255,.45);line-height:1.4;}
+.pro-banner-btn{padding:7px 14px;border-radius:8px;font-size:12px;}
 .section-header{display:flex;align-items:center;gap:12px;margin-bottom:20px;}
 .section-header-icon{width:38px;height:38px;border-radius:11px;background:var(--bg);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .section-divider{border:none;border-top:1.5px solid var(--border);margin:8px -20px 32px;}
@@ -111,58 +195,63 @@ main{flex:1;max-width:1140px;margin:0 auto;width:100%;padding:32px 20px;}
 @media(min-width:900px){.section-divider{display:none;}.page-header{border-bottom:none;padding-bottom:0;}}
 /* CALCULADORA */
 
-.calc-card{background:var(--surface);border:1.5px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:28px;}
-.calc-header{background:var(--dark);padding:14px 20px;display:flex;align-items:center;gap:10px;}
-.calc-header-icon{width:30px;height:30px;background:rgba(0,200,83,.15);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
-.calc-header strong{color:#fff;font-size:13px;font-weight:700;}
+.calc-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;margin-bottom:24px;box-shadow:var(--shadow);}
+.calc-header{background:var(--surface);border-bottom:1px solid var(--border-soft);padding:14px 20px;display:flex;align-items:center;gap:10px;}
+.calc-header-icon{width:28px;height:28px;background:var(--accent-bg);border-radius:var(--r-md);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--accent);}
+.calc-header strong{color:var(--text-1);font-size:13px;font-weight:700;}
 .calc-body{padding:20px;}
 .field{margin-bottom:12px;}
-.field label{display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.4px;}
-.field input{width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:11px 12px;color:var(--text);font-size:15px;font-family:var(--font);font-weight:500;transition:border-color .2s;appearance:none;-webkit-appearance:none;}
-.field select{width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:11px 24px 11px 8px;color:var(--text);font-size:13px;font-family:var(--font);font-weight:500;transition:border-color .2s;appearance:none;-webkit-appearance:none;}
+.field label{display:block;font-size:10px;font-weight:500;color:var(--text-3);margin-bottom:5px;letter-spacing:.1px;}
+.field input{width:100%;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-md);padding:8px 10px;color:var(--text);font-size:13px;font-family:var(--font);font-weight:500;transition:border-color var(--t);appearance:none;-webkit-appearance:none;}
+.field select{width:100%;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-md);padding:8px 24px 8px 10px;color:var(--text);font-size:13px;font-family:var(--font);font-weight:500;transition:border-color var(--t);appearance:none;-webkit-appearance:none;}
 .field input:focus,.field select:focus{outline:none;border-color:var(--green);background:#fff;}
 .field-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
 .select-wrap{position:relative;}
 .select-wrap::after{content:'▾';position:absolute;right:8px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:11px;pointer-events:none;}
-.field input[type="text"]{font-size:14px;}
+.field input[type="text"]{font-size:13px;}
 
 .calc-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px;}
-.btn-calcular{background:var(--green);color:#fff;border:none;padding:14px;border-radius:10px;font-size:14px;font-weight:800;font-family:var(--font);cursor:pointer;transition:background .2s,transform .15s;}
+.btn-calcular{background:var(--green);color:#fff;border:none;padding:10px;border-radius:var(--r-md);font-size:13px;font-weight:600;font-family:var(--font);cursor:pointer;transition:background var(--t),transform .15s;}
 .btn-calcular:active{transform:scale(.98);}
-.btn-salvar{background:var(--bg);color:var(--text);border:1.5px solid var(--border);padding:14px;border-radius:10px;font-size:14px;font-weight:700;font-family:var(--font);cursor:pointer;transition:all .2s;}
-.btn-salvar:hover{border-color:var(--green);color:var(--green-mid);}
+.btn-salvar{background:var(--surface);color:var(--text);border:1px solid var(--border);padding:10px;border-radius:var(--r-md);font-size:13px;font-weight:600;font-family:var(--font);cursor:pointer;transition:all var(--t);}
+.btn-salvar:hover{background:var(--green-light);border-color:var(--green);color:var(--green-mid);}
 .btn-salvar:disabled{opacity:.4;cursor:not-allowed;}
 
 /* RESULTADO */
-.result-box{display:none;border-top:1px solid var(--border);margin-top:16px;padding-top:16px;}
-.result-box.show{display:block;animation:slideDown .3s ease;}
-@keyframes slideDown{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-.result-total{border-radius:10px;padding:16px;text-align:center;margin-bottom:12px;}
-.result-total.profit{background:var(--green-light);}
-.result-total.loss{background:var(--red-light);}
-.result-value{font-size:36px;font-weight:800;letter-spacing:-2px;line-height:1;}
-.result-total.profit .result-value{color:var(--green-mid);}
+.result-box{display:none;margin-top:16px;border-top:1px solid var(--border-soft);padding-top:16px;}
+.result-box.show{display:block;animation:slideDown .25s ease;}
+@keyframes slideDown{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+.result-total{border-radius:var(--r-lg);padding:16px 18px;margin-bottom:14px;text-align:center;}
+.result-total.profit{background:var(--accent-bg);border:1px solid rgba(22,163,74,.18);}
+.result-total.loss{background:var(--red-light);border:1px solid rgba(220,38,38,.18);}
+.result-value{font-family:var(--font-mono);font-size:28px;font-weight:500;letter-spacing:-1px;line-height:1;}
+.result-total.profit .result-value{color:var(--accent);}
 .result-total.loss .result-value{color:var(--red);}
-.result-label{font-size:12px;font-weight:600;margin-top:4px;}
-.result-total.profit .result-label{color:var(--green-mid);}
-.result-total.loss .result-label{color:var(--red);}
-.breakdown{font-size:13px;}
-.bk-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);}
-.bk-row:last-child{border-bottom:none;}
-.bk-row .k{color:var(--muted);}
-.bk-row .v{font-weight:700;}
+.result-label{font-size:11px;font-weight:500;color:var(--text-3);margin-top:5px;letter-spacing:.2px;}
+
+/* Breakdown — tabela vertical */
+.breakdown{display:flex;flex-direction:column;gap:0;}
+.bk-row{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border-soft);gap:8px;}
+.bk-row:last-of-type{border-bottom:none;}
+.bk-row .k{font-size:12px;color:var(--text-3);flex:1;min-width:0;}
+.bk-row .v{font-family:var(--font-mono);font-size:12px;font-weight:500;text-align:right;white-space:nowrap;}
 .bk-row .v.neg{color:var(--red);}
-.bk-row .v.pos{color:var(--green-mid);}
-.bk-min{background:var(--bg);border-radius:8px;padding:8px 12px;margin-top:10px;font-size:12px;color:var(--muted);display:none;}
-.bk-min.show{display:flex;justify-content:space-between;align-items:center;}
-.bk-min strong{font-weight:700;}
+.bk-row .v.pos{color:var(--accent);}
+
+.bk-min{background:var(--surface-2);border:1px solid var(--border-soft);border-radius:var(--r-md);padding:10px 12px;margin-top:12px;display:none;}
+.bk-min.show{display:flex;justify-content:space-between;align-items:center;gap:12px;}
+.bk-min-label{display:flex;flex-direction:column;gap:2px;}
+.bk-min-label span{font-size:11px;font-weight:600;color:var(--text-2);}
+.bk-min-label small{font-size:10px;color:var(--text-3);}
+.bk-min strong{font-family:var(--font-mono);font-size:15px;font-weight:600;color:var(--text-1);white-space:nowrap;flex-shrink:0;}
 
 /* LISTA DE PRODUTOS */
 .produtos-header{display:flex;flex-direction:column;gap:10px;margin-bottom:14px;}
 .produtos-header-row1{display:flex;justify-content:space-between;align-items:center;gap:10px;}
 .produtos-header-row2{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
 .produtos-count{font-size:13px;color:var(--muted);}
-.sort-select{font-size:12px;font-weight:600;color:var(--muted);background:var(--bg);border:1.5px solid var(--border);border-radius:8px;padding:5px 24px 5px 10px;font-family:var(--font);cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%236B7A6D'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;transition:border-color .2s;flex-shrink:0;}
+.sort-select{font-size:12px;font-weight:600;color:var(--muted);background:var(--bg);border:1.5px solid var(--border);border-radius:8px;padding:5px 20px 5px 10px;font-family:var(--font);cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5'%3E%3Cpath d='M0 0l4 5 4-5z' fill='%236B7A6D'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 7px center;transition:border-color .2s;flex-shrink:0;}
 .sort-select:focus{outline:none;border-color:var(--green);}
 .lote-manual-toggle{flex:1;font-size:12px;color:var(--muted);background:none;border:1.5px dashed var(--border);border-radius:6px;cursor:pointer;padding:8px 6px;font-family:var(--font);font-weight:600;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:4px;transition:border-color .2s,color .2s;white-space:nowrap;}
 .lote-manual-toggle:hover{border-color:var(--green);color:var(--green-mid);}
@@ -170,37 +259,37 @@ main{flex:1;max-width:1140px;margin:0 auto;width:100%;padding:32px 20px;}
 .lote-manual-section.show{display:block;}
 
 
-.produto-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:10px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;transition:border-color .2s;}
-.produto-card:hover{border-color:var(--green);}
-.produto-nome{font-size:14px;font-weight:700;letter-spacing:-.3px;margin-bottom:3px;}
-.produto-meta{font-size:12px;color:var(--muted);}
-.produto-margem{text-align:right;flex-shrink:0;}
-.produto-margem-valor{font-size:18px;font-weight:800;letter-spacing:-.5px;}
-.produto-margem-valor.profit{color:var(--green-mid);}
-.produto-margem-valor.loss{color:var(--red);}
-.produto-margem-label{font-size:11px;color:var(--muted);}
-/* Card kebab menu */
-.card-menu-wrap{position:relative;flex-shrink:0;}
-.card-menu-btn{background:none;border:none;color:var(--muted);cursor:pointer;padding:6px 10px;border-radius:8px;font-size:20px;line-height:1;letter-spacing:2px;transition:background .15s,color .15s;font-family:sans-serif;}
-.card-menu-btn:hover{background:var(--bg);color:var(--text);}
-.card-menu-dropdown{position:absolute;right:0;top:calc(100% + 4px);background:#fff;border:1.5px solid var(--border);border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,.10);min-width:130px;z-index:200;overflow:hidden;display:none;}
-.card-menu-dropdown.open{display:block;}
-.card-menu-item{display:flex;align-items:center;gap:8px;padding:11px 14px;font-size:13px;font-weight:600;font-family:var(--font);color:var(--text);background:none;border:none;width:100%;cursor:pointer;transition:background .15s;text-align:left;}
-.card-menu-item:hover{background:var(--bg);}
-.card-menu-item.red{color:var(--red);}
-.card-menu-item.red:hover{background:var(--red-light);}
-@media(max-width:600px){
-  .card-menu-btn{font-size:22px;padding:8px 12px;}
-  .card-menu-item{padding:13px 14px;font-size:14px;}
-}
-.produto-card.editing{border-color:var(--green);background:var(--green-light);}
-.produto-card.danger{border-color:var(--red);background:var(--red-light);}
-.produto-card.danger:hover{border-color:var(--red);}
-.produto-danger-icon{font-size:13px;flex-shrink:0;}
+/* PRODUCT CARD */
+.produto-card{background:var(--surface);border:1px solid var(--border-soft);border-left:3px solid transparent;border-radius:var(--r-lg);padding:12px 14px;margin-bottom:6px;}
+.produto-card:last-child{margin-bottom:0;}
+.produto-card{display:flex;flex-wrap:wrap;align-items:center;gap:10px;transition:all var(--t);}
+.produto-card:hover{background:var(--surface-2);}
+.produto-card.profit-card{border-left-color:var(--accent);}
+.produto-card.danger{border-left-color:var(--red);}
+.produto-card.editing{border-left-color:var(--accent);background:var(--accent-bg);}
 
-.btn-cancelar{width:100%;background:none;border:1.5px solid var(--border);color:var(--muted);padding:11px;border-radius:10px;font-size:13px;font-weight:700;font-family:var(--font);cursor:pointer;margin-top:8px;transition:all .2s;display:none;}
+.produto-info{flex:1;min-width:0;}
+.produto-nome{font-size:13px;font-weight:600;color:var(--text-1);letter-spacing:-.2px;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.produto-meta{font-family:var(--font-mono);font-size:10px;color:var(--text-3);}
+
+.produto-margem-wrap{text-align:right;flex-shrink:0;min-width:52px;}
+.produto-margem-valor{font-family:var(--font-mono);font-size:17px;font-weight:500;line-height:1;}
+.produto-margem-valor.profit{color:var(--accent);}
+.produto-margem-valor.loss{color:var(--red);}
+.produto-margem-label{font-family:var(--font-mono);font-size:9px;color:var(--text-3);letter-spacing:.3px;text-transform:uppercase;margin-top:2px;}
+
+.produto-actions{display:flex;align-items:center;gap:2px;flex-shrink:0;}
+.prod-action-btn{width:28px;height:28px;border:none;background:none;border-radius:var(--r-sm);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-3);transition:all var(--t);opacity:.55;}
+.produto-card:hover .prod-action-btn{opacity:1;}
+.prod-action-btn:hover{background:var(--surface-3);color:var(--text-1);}
+.prod-action-btn.sim:hover,.prod-action-btn.sim.active{background:var(--accent-bg);color:var(--accent-text);}
+.prod-action-btn.sim.active{opacity:1;}
+.prod-action-btn.del:hover{background:var(--red-light);color:var(--red);}
+.prod-action-btn svg{width:14px;height:14px;}
+
+.btn-cancelar{width:100%;background:none;border:1px solid var(--border);color:var(--muted);padding:11px;border-radius:var(--r-lg);font-size:13px;font-weight:700;font-family:var(--font);cursor:pointer;margin-top:8px;transition:all .2s;display:none;}
 .btn-cancelar:hover{border-color:var(--red);color:var(--red);}
-.calc-card.edit-mode .calc-header{background:#0d2b1a;}
+.calc-card.edit-mode .calc-header{background:var(--green-light);border-bottom-color:var(--border-soft);}
 .calc-card.edit-mode{border-color:var(--green);}
 
 /* EMPTY STATE */
@@ -213,9 +302,9 @@ main{flex:1;max-width:1140px;margin:0 auto;width:100%;padding:32px 20px;}
 .loading{text-align:center;padding:32px;color:var(--muted);font-size:14px;}
 
 /* PRO LOCK */
-.pro-lock{background:var(--surface);border:1.5px dashed var(--border);border-radius:14px;padding:28px 24px;text-align:center;}
+.pro-lock{background:var(--surface);border:1px dashed var(--border);border-radius:var(--r-lg);padding:28px 24px;text-align:center;}
 .pro-lock-icon{font-size:32px;margin-bottom:10px;}
-.pro-lock h3{font-size:16px;font-weight:800;letter-spacing:-.4px;margin-bottom:6px;}
+.pro-lock h3{font-size:16px;font-weight:700;letter-spacing:-.4px;margin-bottom:6px;}
 .pro-lock-sub{font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.5;}
 .pro-lock-list{list-style:none;padding:0;margin:0 0 6px;display:flex;flex-direction:column;gap:8px;text-align:left;}
 .pro-lock-list li{font-size:13px;color:var(--text);display:flex;align-items:flex-start;gap:10px;line-height:1.5;}
@@ -225,49 +314,49 @@ main{flex:1;max-width:1140px;margin:0 auto;width:100%;padding:32px 20px;}
 .pro-lock-preview-blur{filter:blur(3px);pointer-events:none;user-select:none;opacity:.7;}
 .pro-lock-preview-badge{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;}
 .pro-lock-preview-badge span{background:rgba(255,255,255,.95);border-radius:100px;padding:6px 16px;font-size:12px;font-weight:700;color:var(--text);box-shadow:0 2px 8px rgba(0,0,0,.12);}
-.pro-lock-btn{background:var(--green);color:#fff;border:none;padding:13px 24px;border-radius:10px;font-size:14px;font-weight:800;font-family:var(--font);cursor:pointer;transition:background .2s,transform .15s;width:100%;}
+.pro-lock-btn{background:var(--green);color:#fff;border:none;padding:13px 24px;border-radius:var(--r-lg);font-size:14px;font-weight:700;font-family:var(--font);cursor:pointer;transition:background var(--t),transform .15s;width:100%;}
 .pro-lock-btn:active{transform:scale(.98);}
 
 /* CTA PÓS-CÁLCULO */
-.calc-pro-cta{display:none;margin-top:14px;background:linear-gradient(135deg,var(--dark) 0%,#0d3d22 100%);border-radius:12px;padding:16px 18px;text-align:center;}
+.calc-pro-cta{display:none;margin-top:14px;background:linear-gradient(135deg,var(--dark) 0%,#0a2e18 100%);border-radius:12px;padding:16px 18px;text-align:center;}
 .calc-pro-cta.show{display:block;animation:fadeInUp .3s ease;}
 @keyframes fadeInUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-.calc-pro-cta-title{color:#fff;font-size:14px;font-weight:800;letter-spacing:-.3px;margin-bottom:4px;}
+.calc-pro-cta-title{color:#fff;font-size:14px;font-weight:700;letter-spacing:-.3px;margin-bottom:4px;}
 .calc-pro-cta-sub{color:rgba(255,255,255,.6);font-size:12px;margin-bottom:12px;line-height:1.5;}
-.calc-pro-cta-btn{width:100%;background:var(--green);color:#fff;border:none;padding:11px;border-radius:10px;font-size:13px;font-weight:800;font-family:var(--font);cursor:pointer;transition:background .2s;}
+.calc-pro-cta-btn{width:100%;background:var(--green);color:#fff;border:none;padding:11px;border-radius:var(--r-md);font-size:13px;font-weight:700;font-family:var(--font);cursor:pointer;transition:background var(--t);}
 .calc-pro-cta-btn:hover{background:var(--green-mid);}
 
 /* MODAL UPGRADE */
 .upgrade-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:200;align-items:flex-end;justify-content:center;}
 .upgrade-overlay.show{display:flex;}
-.upgrade-modal{background:#fff;border-radius:20px 20px 0 0;padding:28px 24px 36px;width:100%;max-width:500px;animation:slideUpModal .25s ease;}
+.upgrade-modal{background:#fff;border-radius:var(--r-xl) var(--r-xl) 0 0;padding:28px 24px 36px;width:100%;max-width:500px;animation:slideUpModal .25s ease;}
 @keyframes slideUpModal{from{transform:translateY(100%)}to{transform:translateY(0)}}
-.upgrade-modal-icon{font-size:30px;margin-bottom:10px;}
-.upgrade-modal h3{font-size:18px;font-weight:800;letter-spacing:-.4px;margin-bottom:6px;}
+.upgrade-modal-icon{font-size:24px;margin-bottom:10px;display:flex;justify-content:center;}
+.upgrade-modal h3{font-size:18px;font-weight:700;letter-spacing:-.4px;margin-bottom:6px;}
 .upgrade-modal-sub{font-size:13px;color:var(--muted);margin-bottom:18px;line-height:1.6;}
 .upgrade-benefits{list-style:none;padding:0;margin:0 0 20px;display:flex;flex-direction:column;gap:10px;}
 .upgrade-benefits li{font-size:13px;color:var(--text);display:flex;align-items:flex-start;gap:10px;line-height:1.5;}
 .upgrade-benefits li span:first-child{flex-shrink:0;font-size:15px;}
-.upgrade-btn{width:100%;background:var(--green);color:#fff;border:none;padding:15px;border-radius:12px;font-size:15px;font-weight:800;font-family:var(--font);cursor:pointer;margin-bottom:10px;transition:background .2s,transform .15s;}
+.upgrade-btn{width:100%;background:var(--green);color:#fff;border:none;padding:15px;border-radius:var(--r-lg);font-size:15px;font-weight:700;font-family:var(--font);cursor:pointer;margin-bottom:10px;transition:background var(--t),transform .15s;}
 .upgrade-btn:active{transform:scale(.98);}
 .upgrade-close{width:100%;background:none;border:none;color:var(--muted);font-size:13px;font-family:var(--font);cursor:pointer;padding:8px;}
 
-footer{padding:20px;border-top:1px solid var(--border);text-align:center;font-size:12px;color:var(--muted);}
+footer{padding:16px 0 8px;text-align:center;font-size:11px;color:var(--muted);margin-top:8px;border-top:1px solid var(--border);}
 
 /* IMPORTAÇÃO EM LOTE */
 .lote-btn{font-size:12px;font-weight:700;color:var(--green-mid);background:none;border:1.5px solid var(--green);padding:5px 12px;border-radius:8px;cursor:pointer;font-family:var(--font);transition:all .2s;display:none;}
 .lote-btn:hover{background:var(--green-light);}
-.lote-painel{background:var(--surface);border:1.5px solid var(--border);border-radius:16px;padding:20px;margin-bottom:20px;display:none;}
+.lote-painel{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-xl);padding:20px;margin-bottom:20px;display:none;}
 .lote-painel.show{display:block;}
-.lote-painel-title{font-size:14px;font-weight:800;letter-spacing:-.3px;margin-bottom:4px;}
+.lote-painel-title{font-size:14px;font-weight:700;letter-spacing:-.3px;margin-bottom:4px;}
 .lote-painel-sub{font-size:12px;color:var(--muted);margin-bottom:16px;line-height:1.5;}
 .lote-config{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
 .lote-config .field{margin-bottom:0;}
 
 /* Toggle switch + antecipação */
-.antecip-row{background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:10px 14px;margin-bottom:4px;}
+.antecip-row{background:var(--bg);border:1px solid var(--border);border-radius:var(--r-md);padding:10px 14px;margin-bottom:4px;}
 .antecip-row-top{display:flex;align-items:center;justify-content:space-between;gap:10px;}
-.antecip-row-label{font-size:13px;font-weight:600;color:var(--text);}
+.antecip-row-label{font-size:12px;font-weight:500;color:var(--text-2);}
 .antecip-row-hint{font-size:11px;color:var(--muted);font-weight:500;display:block;margin-top:2px;}
 .toggle-sw{position:relative;display:inline-flex;width:36px;height:20px;flex-shrink:0;}
 .toggle-sw input{opacity:0;width:0;height:0;position:absolute;}
@@ -281,14 +370,14 @@ footer{padding:20px;border-top:1px solid var(--border);text-align:center;font-si
 .antecip-rate-input:focus{outline:none;border-color:var(--green);}
 .antecip-rate-pct{font-size:12px;color:var(--muted);font-weight:600;}
 /* Campo antecip nos painéis lote/ML */
-.antecip-panel-wrap{display:flex;align-items:center;border:1.5px solid var(--border);border-radius:10px;background:#fff;padding-right:12px;box-sizing:border-box;}
+.antecip-panel-wrap{display:flex;align-items:center;border:1px solid var(--border);border-radius:var(--r-md);background:#fff;padding-right:12px;box-sizing:border-box;}
 .antecip-panel-wrap .antecip-rate-input{flex:1;width:auto;border:none;background:transparent;padding:10px 6px 10px 12px;font-size:15px;font-family:var(--font);box-sizing:border-box;}
 .antecip-panel-wrap .antecip-rate-input:focus{outline:none;}
 .antecip-panel-wrap .antecip-rate-pct{font-size:13px;color:var(--muted);font-weight:600;}
-.lote-textarea{width:100%;min-height:110px;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;color:var(--text);font-size:13px;font-family:var(--font);resize:vertical;transition:border-color .2s;line-height:1.6;}
+.lote-textarea{width:100%;min-height:110px;background:var(--bg);border:1px solid var(--border);border-radius:var(--r-md);padding:12px 14px;color:var(--text);font-size:13px;font-family:var(--font);resize:vertical;transition:border-color .2s;line-height:1.6;}
 .lote-textarea:focus{outline:none;border-color:var(--green);background:#fff;}
 .lote-textarea-hint{font-size:11px;color:var(--muted);margin-top:5px;margin-bottom:12px;}
-.lote-parse-btn{width:100%;background:var(--green);color:#fff;border:none;padding:12px;border-radius:10px;font-size:14px;font-weight:800;font-family:var(--font);cursor:pointer;transition:background .2s;}
+.lote-parse-btn{width:100%;background:var(--green);color:#fff;border:none;padding:12px;border-radius:var(--r-md);font-size:14px;font-weight:700;font-family:var(--font);cursor:pointer;transition:background var(--t);}
 .lote-parse-btn:hover{background:var(--green-mid);}
 @media(max-width:600px){.lote-textarea,.field input,.field input[type="text"],.lote-input,.antecip-rate-input,.antecip-panel-wrap .antecip-rate-input{font-size:16px;}.antecip-panel-wrap .antecip-rate-input{padding:9px 6px 9px 12px;}}
 @media(max-width:360px){
@@ -300,11 +389,11 @@ footer{padding:20px;border-top:1px solid var(--border);text-align:center;font-si
 .lote-preview{margin-top:18px;display:none;}
 .lote-preview.show{display:block;}
 .lote-preview-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:8px;}
-.lote-preview-header h4{font-size:13px;font-weight:800;letter-spacing:-.2px;}
+.lote-preview-header h4{font-size:13px;font-weight:700;letter-spacing:-.2px;}
 .lote-preview-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
 .lote-sel-all{font-size:12px;font-weight:600;color:var(--muted);background:none;border:none;cursor:pointer;font-family:var(--font);padding:0;}
 .lote-sel-all:hover{color:var(--text);}
-.lote-save-btn{background:var(--green);color:#fff;border:none;padding:8px 16px;border-radius:8px;font-size:13px;font-weight:800;font-family:var(--font);cursor:pointer;transition:background .2s;white-space:nowrap;}
+.lote-save-btn{background:var(--green);color:#fff;border:none;padding:8px 16px;border-radius:var(--r-md);font-size:13px;font-weight:700;font-family:var(--font);cursor:pointer;transition:background var(--t);white-space:nowrap;}
 .lote-save-btn:disabled{opacity:.4;cursor:not-allowed;}
 .lote-table{width:100%;border-collapse:collapse;font-size:13px;}
 .lote-table th{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;padding:6px 8px;text-align:left;border-bottom:1px solid var(--border);}
@@ -314,7 +403,7 @@ footer{padding:20px;border-top:1px solid var(--border);text-align:center;font-si
 .lote-table tr.danger-row{background:var(--red-light);}
 .lote-input{width:100%;background:transparent;border:1.5px solid transparent;border-radius:6px;padding:4px 6px;font-size:13px;font-family:var(--font);color:var(--text);transition:border-color .2s;}
 .lote-input:focus{outline:none;border-color:var(--green);background:#fff;}
-.lote-margem{font-weight:800;font-size:13px;letter-spacing:-.3px;}
+.lote-margem{font-family:var(--font-mono);font-weight:500;font-size:12px;letter-spacing:0;}
 .lote-margem.profit{color:var(--green-mid);}
 .lote-margem.loss{color:var(--red);}
 .lote-erro-parse{background:var(--red-light);color:var(--red);border-radius:8px;padding:8px 12px;font-size:12px;font-weight:600;margin-top:8px;display:none;}
@@ -333,76 +422,136 @@ footer{padding:20px;border-top:1px solid var(--border);text-align:center;font-si
 .nav-portal:hover{background:var(--green-light);}
 
 /* TOAST */
-.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--dark);color:#fff;padding:12px 20px;border-radius:12px;font-size:13px;font-weight:600;z-index:999;transition:transform .3s ease;pointer-events:none;white-space:nowrap;}
-.toast.show{transform:translateX(-50%) translateY(0);}
+.toast{position:fixed;bottom:20px;right:20px;transform:translateY(60px);opacity:0;background:var(--dark);color:#fff;padding:12px 20px;border-radius:var(--r-lg);font-size:13px;font-weight:600;z-index:999;transition:transform .3s ease,opacity .3s ease;pointer-events:none;white-space:nowrap;box-shadow:0 4px 16px rgba(0,0,0,.18);}
+.toast.show{transform:translateY(0);opacity:1;}
 .toast.error{background:var(--red);}
 
 /* CALC ERROR */
-.calc-error{display:none;background:var(--red-light);color:var(--red);border-radius:10px;padding:10px 14px;font-size:13px;font-weight:600;margin-top:8px;}
+.calc-error{display:none;background:var(--red-light);color:var(--red);border-radius:var(--r-md);padding:10px 14px;font-size:13px;font-weight:600;margin-top:8px;}
 .calc-error.show{display:block;}
 
 
 @media(max-width:480px){
-  .nav-user{display:none !important;}
-  .nav-portal{font-size:11px;padding:4px 9px;}
+  .mc-tool-sub{display:none;}
 }
 @media(min-width:600px){
   .lote-config{grid-template-columns:1fr 1fr;}
 }
 @media(min-width:900px){
-  nav{padding:14px 0;}
-  nav .inner{padding:0 40px;}
-  .nav-user{display:block;}
-  main{padding:40px 40px;}
-  .stats-grid{grid-template-columns:repeat(2,1fr);}
-  .app-grid{display:grid;grid-template-columns:420px 1fr;gap:28px;align-items:start;}
+  main{padding:20px 24px;}
+  .stats-grid{grid-template-columns:repeat(4,1fr);}
   .calc-card{margin-bottom:0;}
-  footer{padding:24px 0;}
+  footer{padding:16px 0;}
 }
 @media(min-width:1200px){
-  nav .inner{padding:0;}
-  main{padding:40px 0;}
+  main{padding:20px 32px;}
 }
 
+/* PRODUTOS-SECTION como SK-CARD ────────────────────── */
+#produtos-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;box-shadow:var(--shadow);}
+.produtos-header{background:var(--surface);padding:10px 16px;border-bottom:1px solid var(--border-soft);margin-bottom:0!important;}
+.produtos-header-row1 .section-title{color:var(--text-1);font-size:13px!important;font-weight:600!important;}
+.produtos-header-row1 .section-header-icon{width:26px;height:26px;background:var(--green-light);border-radius:var(--r-md);display:flex!important;align-items:center;justify-content:center;flex-shrink:0;}
+.produtos-header .sort-select{background:var(--surface-2);border-color:var(--border);color:var(--text-3);font-size:11px;}
+.produtos-header .lote-btn{color:var(--green-mid);border-color:var(--green);}
+.produtos-header .ml-btn{font-size:11px;}
+.produtos-header-row2{margin-top:6px;}
+#produtos-count-row{padding:8px 16px 0;}
+#produtos-lista{padding:10px 16px 10px;}
+.historico{padding:0 16px 12px;}
+.lote-painel,.ml-painel{margin:8px 16px;border-radius:var(--r-md);}
+.lote-preview{padding:0 16px 12px;margin:0;}
+
+/* 2-COLUMN TOOL LAYOUT */
+.tool-grid{display:grid;grid-template-columns:380px 1fr;gap:16px;align-items:start;}
+.tool-col-left{position:sticky;top:0;}
+@media(max-width:1100px){.tool-grid{grid-template-columns:340px 1fr;}}
+@media(max-width:899px){.tool-grid{display:block;}.tool-col-left{position:static;}}
+
+/* CALC-CARD alinhado ao sk-card ─────────────────────── */
+.calc-card{margin-bottom:14px;}
+.calc-header{padding:10px 16px;}
+.calc-body{padding:16px;}
+
 /* CONFIRMAÇÃO DE DELETE */
-.del-confirm{display:flex;align-items:center;gap:8px;flex-wrap:wrap;width:100%;padding:10px 12px;background:var(--red-light);border:1px solid #fca5a5;border-radius:10px;font-size:12px;font-weight:600;color:var(--text);}
+.del-confirm{display:flex;align-items:center;gap:8px;flex-wrap:wrap;width:100%;padding:10px 12px;background:var(--red-light);border:1px solid var(--red-light);border-radius:var(--r-md);font-size:12px;font-weight:600;color:var(--text);}
 .del-confirm span{flex:1;min-width:0;}
 .del-sim{background:var(--red);color:#fff;border:none;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:700;font-family:var(--font);cursor:pointer;white-space:nowrap;}
 .del-nao{background:transparent;color:var(--muted);border:1.5px solid var(--border);border-radius:8px;padding:6px 12px;font-size:12px;font-weight:700;font-family:var(--font);cursor:pointer;white-space:nowrap;}
 
-/* SIMULADOR DE PROMOÇÃO */
-.simulador{display:none;background:var(--bg);border:1.5px solid var(--border);border-radius:12px;padding:14px 16px;margin-top:12px;}
-.simulador.show{display:block;}
-.sim-header{display:flex;align-items:center;gap:8px;margin-bottom:12px;font-size:13px;font-weight:700;}
-.sim-pro-tag{font-size:10px;font-weight:700;background:var(--green-light);color:var(--green-mid);border-radius:100px;padding:2px 7px;letter-spacing:.3px;}
+/* SIMULADOR INLINE — por produto na cartela */
+.prod-sim-btn{display:flex;align-items:center;gap:4px;font-size:10px;font-weight:600;color:var(--accent-text);background:var(--accent-bg);border:none;border-radius:var(--r-sm);padding:3px 8px;cursor:pointer;font-family:var(--font);transition:all var(--t);white-space:nowrap;}
+.prod-sim-btn:hover{background:var(--accent);color:#fff;}
+.prod-sim-btn.active{background:var(--accent);color:#fff;}
+.prod-sim-panel{display:none;width:100%;margin-top:10px;padding-top:12px;border-top:1px solid var(--border-soft);flex-direction:column;gap:10px;order:99;}
+.prod-sim-panel.show{display:flex;}
+.prod-sim-row{display:flex;align-items:center;gap:8px;}
+.prod-sim-wrap{display:flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:7px 10px;flex:1;transition:border-color var(--t);}
+.prod-sim-wrap:focus-within{border-color:var(--accent);}
+.prod-sim-wrap span{color:var(--text-3);font-size:12px;font-family:var(--font-mono);white-space:nowrap;flex-shrink:0;}
+.prod-sim-input{border:none;outline:none;font-family:var(--font-mono);font-size:14px;font-weight:500;width:56px;min-width:0;background:transparent;color:var(--text-1);-webkit-appearance:none;-moz-appearance:textfield;appearance:textfield;}
+.prod-sim-input::-webkit-inner-spin-button,.prod-sim-input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0;}
+.prod-sim-input::placeholder{color:var(--text-3);font-size:12px;}
+.prod-sim-calc-btn{background:var(--accent);color:#fff;border:none;border-radius:var(--r-md);padding:7px 14px;font-size:12px;font-weight:600;font-family:var(--font);cursor:pointer;white-space:nowrap;transition:background var(--t);}
+.prod-sim-calc-btn:hover{background:var(--accent-hover);}
+.prod-sim-result{display:none;}
+.prod-sim-result.show{display:block;}
+.prod-sim-result-row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border-soft);font-size:12px;}
+.prod-sim-result-row:last-of-type{border-bottom:none;}
+.prod-sim-result-row span{color:var(--text-3);}
+.prod-sim-result-row strong{font-family:var(--font-mono);font-size:12px;font-weight:500;}
+.prod-sim-result-row strong.profit{color:var(--accent);}
+.prod-sim-result-row strong.loss{color:var(--red);}
+.prod-sim-alert{margin-top:8px;font-size:11px;font-weight:600;color:var(--red);background:var(--red-light);border-radius:var(--r-sm);padding:6px 10px;display:flex;align-items:center;gap:5px;}
+.prod-sim-lock{font-size:11px;color:var(--text-3);display:flex;align-items:center;gap:8px;}
+.prod-sim-lock button{font-size:11px;font-weight:600;color:var(--accent);background:none;border:none;cursor:pointer;font-family:var(--font);padding:0;}
+
+/* SIMULADOR — card separado */
+.sim-card{display:none;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-xl);overflow:hidden;box-shadow:var(--shadow);margin-top:10px;animation:slideDown .25s ease;}
+.sim-card.show{display:block;}
+.sim-card-header{display:flex;align-items:center;justify-content:space-between;padding:11px 16px;border-bottom:1px solid var(--border-soft);}
+.sim-card-title{font-size:12px;font-weight:600;color:var(--text-1);display:flex;align-items:center;gap:7px;}
+.sim-card-title svg{width:13px;height:13px;color:var(--accent);}
+.sim-pro-tag{font-family:var(--font-mono);font-size:9px;font-weight:600;background:var(--accent-bg);color:var(--accent-text);border-radius:4px;padding:2px 6px;letter-spacing:.3px;}
+.sim-card-body{padding:14px 16px;}
 .sim-input-row{display:flex;align-items:center;gap:8px;}
-.sim-input-wrap{display:flex;align-items:center;gap:6px;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;padding:8px 12px;flex:1;}
-.sim-input-wrap span{color:var(--muted);font-size:13px;font-weight:600;}
-.sim-input{border:none;outline:none;font-family:var(--font);font-size:16px;font-weight:600;width:100%;background:transparent;}
-.sim-btn{background:var(--dark);color:#fff;border:none;border-radius:8px;padding:9px 14px;font-size:13px;font-weight:700;font-family:var(--font);cursor:pointer;white-space:nowrap;transition:opacity .2s;}
-.sim-btn:hover{opacity:.85;}
-.sim-resultado{display:none;margin-top:12px;border-top:1px solid var(--border);padding-top:12px;}
+.sim-input-wrap{display:flex;align-items:center;gap:6px;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-md);padding:8px 12px;flex:1;transition:border-color var(--t),background var(--t);}
+.sim-input-wrap:focus-within{border-color:var(--accent);background:var(--surface);}
+.sim-input-wrap span{color:var(--text-3);font-size:12px;font-family:var(--font-mono);}
+.sim-input{border:none;outline:none;font-family:var(--font-mono);font-size:15px;font-weight:500;width:100%;background:transparent;color:var(--text-1);}
+.sim-input::placeholder{color:var(--text-3);font-size:13px;}
+.sim-btn{background:var(--accent);color:#fff;border:none;border-radius:var(--r-md);padding:9px 16px;font-size:13px;font-weight:600;font-family:var(--font);cursor:pointer;white-space:nowrap;transition:background var(--t);}
+.sim-btn:hover{background:var(--accent-hover);}
+.sim-resultado{display:none;margin-top:12px;border-top:1px solid var(--border-soft);padding-top:12px;}
 .sim-resultado.show{display:block;}
-.sim-row{display:flex;justify-content:space-between;align-items:center;font-size:13px;padding:4px 0;}
-.sim-alert{margin-top:8px;font-size:12px;font-weight:700;color:var(--red);background:var(--red-light);border-radius:8px;padding:6px 10px;}
-.sim-erro{font-size:12px;font-weight:600;color:var(--red);min-height:0;margin-top:6px;display:none;}
+.sim-row{display:flex;justify-content:space-between;align-items:center;font-size:12px;padding:5px 0;border-bottom:1px solid var(--border-soft);}
+.sim-row:last-of-type{border-bottom:none;}
+.sim-row span{color:var(--text-3);}
+.sim-row strong{font-family:var(--font-mono);font-size:12px;font-weight:500;}
+.sim-row strong.profit{color:var(--accent);}
+.sim-row strong.loss{color:var(--red);}
+.sim-alert{margin-top:10px;font-size:12px;font-weight:600;color:var(--red);background:var(--red-light);border-radius:var(--r-md);padding:8px 12px;display:flex;align-items:center;gap:6px;}
+.sim-erro{font-size:12px;color:var(--red);margin-top:6px;display:none;}
 .sim-erro.show{display:block;}
-.sim-lock{display:none;text-align:center;padding:6px;font-size:13px;color:var(--muted);}
-.sim-lock button{margin-left:6px;font-size:12px;font-weight:700;color:var(--green-mid);background:none;border:none;cursor:pointer;font-family:var(--font);}
+.sim-lock{display:none;flex-direction:column;align-items:center;text-align:center;padding:20px 16px;gap:8px;}
+.sim-lock-icon{font-size:24px;}
+.sim-lock-text{font-size:12px;color:var(--text-3);line-height:1.6;max-width:200px;}
+.sim-lock-btn{background:var(--accent);color:#fff;border:none;border-radius:var(--r-md);padding:8px 18px;font-size:12px;font-weight:600;font-family:var(--font);cursor:pointer;margin-top:2px;transition:background var(--t);}
+.sim-lock-btn:hover{background:var(--accent-hover);}
 
 /* MERCADO LIVRE */
-.ml-btn{display:none;align-items:center;gap:6px;background:#fff200;color:#333;border:none;border-radius:8px;padding:7px 12px;font-size:12px;font-weight:700;font-family:var(--font);cursor:pointer;transition:opacity .2s;white-space:nowrap;}
-.ml-btn:hover{opacity:.85;}
-.ml-painel{display:none;background:var(--surface);border:1.5px solid var(--border);border-radius:14px;padding:20px;margin-bottom:16px;}
+.ml-btn{display:none;align-items:center;gap:6px;background:transparent;color:var(--accent);border:1.5px solid var(--accent);border-radius:8px;padding:6px 12px;font-size:12px;font-weight:600;font-family:var(--font);cursor:pointer;transition:all var(--t);white-space:nowrap;}
+.ml-btn:hover{background:var(--accent-bg);}
+.ml-painel{display:none;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:20px;margin-bottom:16px;}
 .ml-painel.show{display:block;}
-.ml-painel-title{font-size:14px;font-weight:800;margin-bottom:4px;}
+.ml-painel-title{font-size:14px;font-weight:700;margin-bottom:4px;}
 .ml-painel-sub{font-size:12px;color:var(--muted);margin-bottom:16px;}
 .ml-status-bar{display:flex;align-items:center;justify-content:space-between;font-size:12px;margin-bottom:14px;}
 .ml-status-ok{font-weight:700;color:var(--green-mid);}
 .ml-desconectar-btn{font-size:11px;color:var(--muted);background:none;border:none;cursor:pointer;font-family:var(--font);text-decoration:underline;}
 .ml-connect-area{text-align:center;padding:20px 0;}
-.ml-connect-btn{background:#fff200;color:#333;border:none;border-radius:10px;padding:12px 24px;font-size:14px;font-weight:800;font-family:var(--font);cursor:pointer;transition:opacity .2s;}
-.ml-connect-btn:hover{opacity:.85;}
+.ml-connect-btn{background:var(--accent);color:#fff;border:none;border-radius:var(--r-md);padding:12px 24px;font-size:14px;font-weight:700;font-family:var(--font);cursor:pointer;transition:background var(--t);}
+.ml-connect-btn:hover{background:var(--accent-hover);}
 .ml-connect-sub{font-size:11px;color:var(--muted);margin-top:8px;}
 .ml-thumb{width:36px;height:36px;object-fit:cover;border-radius:6px;display:block;}
 .ml-td-img{width:44px;padding:4px 0!important;}
@@ -414,12 +563,12 @@ footer{padding:20px;border-top:1px solid var(--border);text-align:center;font-si
 .ml-margem-cell{font-size:12px;font-weight:700;}
 .ml-margem-cell.profit{color:var(--green-mid);}
 .ml-margem-cell.loss{color:var(--red);}
-.ml-importar-btn{background:var(--green-mid);color:#fff;border:none;border-radius:8px;padding:9px 16px;font-size:13px;font-weight:700;font-family:var(--font);cursor:pointer;transition:opacity .2s;}
+.ml-importar-btn{background:var(--accent);color:#fff;border:none;border-radius:var(--r-md);padding:9px 16px;font-size:13px;font-weight:700;font-family:var(--font);cursor:pointer;transition:background var(--t);}
 .ml-importar-btn:disabled{opacity:.5;cursor:not-allowed;}
-.ml-importar-btn:not(:disabled):hover{opacity:.85;}
+.ml-importar-btn:not(:disabled):hover{background:var(--accent-hover);}
 
 /* HISTÓRICO DA SESSÃO */
-.historico{display:none;background:var(--surface);border:1.5px solid var(--border);border-radius:14px;padding:16px;margin-bottom:24px;}
+.historico{display:none;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:16px;margin-bottom:24px;}
 .historico.show{display:block;}
 .historico-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
 .historico-title{font-size:13px;font-weight:700;}
@@ -431,116 +580,227 @@ footer{padding:20px;border-top:1px solid var(--border);text-align:center;font-si
 .hist-lucro{font-size:12px;color:var(--muted);min-width:88px;text-align:right;}
 .historico-cta{margin-top:12px;text-align:center;font-size:12px;font-weight:700;color:var(--green-mid);cursor:pointer;padding:8px;background:var(--green-light);border-radius:8px;}
 
-/* Mobile nav hamburger */
-.nav-hamburger{display:none;background:none;border:none;cursor:pointer;padding:4px;color:var(--text);align-items:center;justify-content:center;}
-.nav-mob-menu{position:fixed;top:0;left:0;right:0;bottom:0;z-index:500;pointer-events:none;}
-.nav-mob-overlay{position:absolute;inset:0;background:rgba(0,0,0,.45);opacity:0;transition:opacity .25s;}
-.nav-mob-panel{position:absolute;top:0;left:0;right:0;background:#fff;border-radius:0 0 24px 24px;overflow:hidden;transform:translateY(-110%);transition:transform .3s cubic-bezier(.4,0,.2,1);box-shadow:0 8px 40px rgba(0,0,0,.18);}
-.nav-mob-menu.open{pointer-events:auto;}
-.nav-mob-menu.open .nav-mob-overlay{opacity:1;}
-.nav-mob-menu.open .nav-mob-panel{transform:translateY(0);}
-/* Header escuro do menu */
-.nav-mob-head{display:flex;align-items:center;gap:12px;padding:20px 16px 18px;background:var(--dark);}
-.mob-avatar{width:44px;height:44px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:#fff;flex-shrink:0;font-family:var(--font);letter-spacing:0;}
-.nav-mob-head-info{flex:1;min-width:0;}
-.nav-mob-head-info .mob-email{font-size:13px;color:rgba(255,255,255,.75);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:0;}
-.nav-mob-head .nav-plano{background:rgba(255,255,255,.15)!important;color:rgba(255,255,255,.95)!important;border:none!important;font-size:11px;display:inline-flex;align-items:center;margin-top:5px;}
-.nav-mob-close{background:rgba(255,255,255,.12);border:none;cursor:pointer;width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.8);flex-shrink:0;transition:background .15s;}
-.nav-mob-close:hover{background:rgba(255,255,255,.22);}
-/* Itens do menu */
-.mob-items{display:flex;flex-direction:column;padding:8px 10px 14px;}
-.mob-item{display:flex;align-items:center;gap:14px;padding:14px 10px;border-radius:12px;font-size:15px;font-weight:600;color:var(--text);text-decoration:none;background:none;border:none;cursor:pointer;font-family:var(--font);width:100%;text-align:left;transition:background .15s;}
-.mob-item:hover,.mob-item:active{background:var(--bg);}
-.mob-icon{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+/* mob-item-text/mob-icon kept for atualizarStatusML compatibility */
 .mob-item-text{flex:1;min-width:0;}
-.mob-item-sub{font-size:12px;color:var(--muted);font-weight:500;display:block;margin-top:2px;}
-.mob-divider{height:1px;background:var(--border);margin:4px 0;}
-.mob-item.danger{color:var(--red);}
-@media(max-width:899px){
-  .nav-hamburger{display:flex;}
+.mob-item-sub{font-size:11px;color:var(--muted);font-weight:500;display:block;margin-top:1px;}
+.mob-icon{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+
+/* ── HUB SHELL ─────────────────────────────────────────── */
+.hub-wrapper{display:flex;flex-direction:row;height:100%;overflow:hidden;}
+.hub-sidebar{
+  width:220px;min-width:220px;background:var(--sidebar-bg);
+  border-right:1px solid var(--border);
+  display:flex;flex-direction:column;
+  position:sticky;top:0;height:100vh;overflow-y:auto;
+  z-index:150;flex-shrink:0;
 }
-@media(min-width:900px){
-  .nav-hamburger{display:flex;}
-  .nav-mob-panel{
-    top:0;bottom:0;left:auto;right:0;width:300px;height:100vh;
-    border-radius:0 0 0 20px;
-    overflow-y:auto;
-    transform:translateX(110%);
-    box-shadow:-8px 0 40px rgba(0,0,0,.12);
+.hub-content{flex:1;min-width:0;display:flex;flex-direction:column;overflow:hidden;height:100%;}
+.hub-logo-wrap{
+  display:flex;align-items:center;gap:10px;
+  height:52px;padding:0 16px;box-sizing:border-box;
+  border-bottom:1px solid var(--border-soft);flex-shrink:0;
+}
+.hub-logo-text{font-size:15px;font-weight:700;letter-spacing:-.3px;color:var(--text-1);line-height:1.2;}
+.hub-logo-text span{display:block;font-size:9px;font-weight:400;color:var(--text-3);letter-spacing:.5px;text-transform:uppercase;margin-top:2px;}
+
+/* Sidebar nav */
+.hub-nav{flex:1;padding:10px 8px;display:flex;flex-direction:column;}
+.hub-nav-section{font-family:var(--font-mono);font-size:9px;font-weight:500;color:var(--text-3);letter-spacing:1px;text-transform:uppercase;padding:10px 8px 5px;}
+.hub-nav-item{
+  display:flex;align-items:center;gap:9px;
+  padding:8px 10px;border-radius:var(--r-md);cursor:pointer;
+  font-size:13px;font-weight:400;color:var(--text-2);
+  border:none;background:none;width:100%;text-align:left;
+  transition:background var(--t),color var(--t);text-decoration:none;
+  font-family:var(--font);
+}
+.hub-nav-item:hover{background:var(--surface-2);color:var(--text-1);}
+.hub-nav-item.active{background:var(--sidebar-active-bg);color:var(--sidebar-active-text);font-weight:600;}
+.hub-nav-item.disabled{opacity:.35;cursor:default;pointer-events:none;}
+.hub-nav-icon{width:15px;height:15px;flex-shrink:0;}
+.hub-nav-badge{
+  margin-left:auto;font-family:var(--font-mono);font-size:9px;font-weight:600;
+  background:var(--surface-3);color:var(--text-3);
+  padding:2px 6px;border-radius:20px;letter-spacing:.3px;
+}
+.hub-nav-badge.soon{background:var(--accent-bg);color:var(--accent-text);}
+
+
+/* Sidebar bottom */
+.hub-sidebar-bottom{padding:10px 8px;border-top:1px solid var(--border-soft);}
+.hub-sidebar-user{
+  display:flex;align-items:center;gap:9px;
+  padding:8px 10px;border-radius:var(--r-md);margin-bottom:2px;
+}
+.hub-avatar{
+  width:30px;height:30px;border-radius:50%;
+  background:var(--accent-bg);color:var(--accent-text);
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:700;flex-shrink:0;border:1px solid var(--border);
+}
+.hub-user-info{min-width:0;}
+.hub-user-email{font-size:11px;color:var(--text-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:140px;}
+.hub-user-plano{font-family:var(--font-mono);font-size:9px;font-weight:600;color:var(--accent-text);background:var(--accent-bg);border-radius:3px;padding:1px 5px;display:inline-block;margin-top:2px;}
+
+.hub-toggle{display:none;}
+.hub-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:149;}
+.hub-overlay.open{display:block;}
+@media(max-width:899px){
+  html,body{height:auto;overflow:visible;}
+  .hub-wrapper{display:block;height:auto;overflow:visible;}
+  .hub-content{display:block;height:auto;overflow:visible;}
+  .mc-topbar{position:sticky;top:0;}
+  main{overflow-y:visible;}
+  .hub-sidebar{
+    position:fixed;top:0;left:0;height:100vh;
+    transform:translateX(-100%);transition:transform .25s ease;z-index:150;
   }
-  .nav-mob-menu.open .nav-mob-panel{transform:translateX(0);}
+  .hub-sidebar.open{transform:translateX(0);}
+  .hub-toggle{
+    display:flex;align-items:center;justify-content:center;
+    width:36px;height:36px;border:none;background:none;cursor:pointer;
+    color:var(--text-2);padding:0;border-radius:var(--r-md);flex-shrink:0;
+    transition:background var(--t);
+  }
+  .hub-toggle:hover{background:var(--surface-2);}
 }
 </style>
 <script type="text/javascript">(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","vyyczrfk4u");</script>
 </head>
 <body>
 
-<nav>
-  <div class="inner">
-    <a href="/" class="logo">Margem<em>Certa</em></a>
-    <div class="nav-right">
-      <span class="nav-plano" id="nav-plano" style="visibility:hidden"></span>
-      <span id="nav-email" style="display:none"></span>
-      <button id="nav-portal" style="display:none" onclick="abrirPortal()"></button>
-      <button class="nav-hamburger" onclick="toggleNavMenu()" aria-label="Menu">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-      </button>
-    </div>
+<div class="hub-overlay" id="hub-overlay" onclick="toggleSidebar()"></div>
+<div class="hub-wrapper">
+
+<aside class="hub-sidebar" id="hub-sidebar">
+  <div class="hub-logo-wrap">
+    <svg width="28" height="28" viewBox="0 0 100 100" aria-hidden="true">
+      <rect x="0"  y="0"  width="63" height="30" rx="6" fill="#d1e0d1"/>
+      <rect x="68" y="0"  width="32" height="30" rx="6" fill="#16a34a"/>
+      <rect x="0"  y="35" width="32" height="30" rx="6" fill="#d1e0d1"/>
+      <rect x="37" y="35" width="63" height="30" rx="6" fill="#15803d"/>
+      <rect x="0"  y="70" width="30" height="30" rx="6" fill="#0f1f0f"/>
+      <rect x="35" y="70" width="30" height="30" rx="6" fill="#0f1f0f"/>
+      <rect x="70" y="70" width="30" height="30" rx="6" fill="#0f1f0f"/>
+    </svg>
+    <div class="hub-logo-text">SellerKit<span>Hub de ferramentas</span></div>
   </div>
-</nav>
-<!-- Mobile Nav Menu -->
-<div class="nav-mob-menu" id="nav-mob-menu">
-  <div class="nav-mob-overlay" onclick="toggleNavMenu()"></div>
-  <div class="nav-mob-panel">
-    <div class="nav-mob-head">
-      <div class="mob-avatar" id="nav-mob-avatar">?</div>
-      <div class="nav-mob-head-info">
-        <div class="mob-email" id="nav-mob-email">—</div>
-        <span class="nav-plano" id="nav-mob-plano" style="visibility:hidden"></span>
+
+  <nav class="hub-nav" aria-label="Ferramentas">
+    <div class="hub-nav-section">Ferramentas</div>
+
+    <a class="hub-nav-item active" href="#">
+      <svg class="hub-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="7" x2="16" y2="7"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="8" y1="17" x2="12" y2="17"/></svg>
+      Margem Certa
+    </a>
+
+    <button class="hub-nav-item disabled" type="button">
+      <svg class="hub-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      Precificador
+      <span class="hub-nav-badge soon">Em breve</span>
+    </button>
+
+    <button class="hub-nav-item disabled" type="button">
+      <svg class="hub-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      Analytics
+      <span class="hub-nav-badge soon">Em breve</span>
+    </button>
+
+    <button class="hub-nav-item disabled" type="button">
+      <svg class="hub-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="2"/></svg>
+      Anúncios ML
+      <span class="hub-nav-badge soon">Em breve</span>
+    </button>
+  </nav>
+
+  <div class="hub-sidebar-bottom">
+    <div class="hub-sidebar-user">
+      <div class="hub-avatar" id="hub-avatar">?</div>
+      <div class="hub-user-info">
+        <div class="hub-user-email" id="hub-email">—</div>
+        <div class="hub-user-plano" id="hub-plano"></div>
       </div>
-      <button class="nav-mob-close" onclick="toggleNavMenu()" aria-label="Fechar">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </button>
     </div>
-    <div class="mob-items">
-      <button class="mob-item" id="nav-mob-portal" onclick="abrirPortal();toggleNavMenu()" style="display:none">
-        <div class="mob-icon" style="background:var(--green-light);">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--green-mid)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/><line x1="6" y1="15" x2="10" y2="15"/></svg>
+
+    <div class="hub-account-actions">
+      <button class="hub-action-btn" id="nav-mob-portal" onclick="abrirPortal()" style="display:none">
+        <div class="mob-icon" style="background:var(--accent-bg);">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
         </div>
-        <div class="mob-item-text"><span>Gerenciar plano</span><span class="mob-item-sub">Fatura e cancelamento</span></div>
+        <div class="mob-item-text"><span>Gerenciar plano</span></div>
       </button>
-      <button class="mob-item" id="nav-mob-assinar" onclick="assinarPro();toggleNavMenu()" style="display:none">
-        <div class="mob-icon" style="background:#FFF3E0;">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E67700" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+      <button class="hub-action-btn" id="nav-mob-assinar" onclick="assinarPro()" style="display:none">
+        <div class="mob-icon" style="background:var(--accent-bg);">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
         </div>
-        <div class="mob-item-text"><span>Assinar Pro</span><span class="mob-item-sub">R$37/mês — salve produtos e mais</span></div>
+        <div class="mob-item-text"><span>Assinar Pro</span></div>
       </button>
-      <button class="mob-item" id="nav-mob-ml" onclick="conectarML();toggleNavMenu()" style="display:none">
-        <div class="mob-icon" style="background:#FFF3E0;">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E67700" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      <button class="hub-action-btn" id="nav-mob-ml" onclick="conectarML()" style="display:none">
+        <div class="mob-icon" style="background:var(--accent-bg);">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
         </div>
-        <div class="mob-item-text"><span>Conectar Mercado Livre</span><span class="mob-item-sub">Importe seus anúncios</span></div>
+        <div class="mob-item-text"><span>Mercado Livre</span></div>
       </button>
-      <div class="mob-divider"></div>
-      <a class="mob-item" href="https://wa.me/5541984335487?text=Ol%C3%A1!%20Tenho%20uma%20d%C3%BAvida%20sobre%20o%20Margem%20Certa" target="_blank" rel="noopener">
-        <div class="mob-icon" style="background:var(--green-light);">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--green-mid)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      <div class="hub-action-divider"></div>
+      <a class="hub-action-btn" href="https://wa.me/5541984335487?text=Ol%C3%A1!%20Tenho%20uma%20d%C3%BAvida%20sobre%20o%20Margem%20Certa" target="_blank" rel="noopener">
+        <div class="mob-icon" style="background:var(--accent-bg);">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
         </div>
-        <div class="mob-item-text"><span>Falar no WhatsApp</span><span class="mob-item-sub">Suporte rápido</span></div>
+        <div class="mob-item-text"><span>Suporte WhatsApp</span></div>
       </a>
-      <div class="mob-divider"></div>
-      <button class="mob-item danger" onclick="logout()">
+      <button class="hub-action-btn danger" onclick="logout()">
         <div class="mob-icon" style="background:var(--red-light);">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
         </div>
         <div class="mob-item-text"><span>Sair da conta</span></div>
       </button>
     </div>
+
+    <!-- elementos ocultos para compatibilidade com carregarPerfil/syncHubUser -->
+    <div id="nav-mob-email" style="display:none">—</div>
+    <div id="nav-mob-name" style="display:none"></div>
+    <span id="nav-mob-plano" style="display:none"></span>
+    <div id="nav-mob-avatar" style="display:none">?</div>
   </div>
-</div>
+</aside>
+
+<div class="hub-content">
+
+<header class="mc-topbar">
+  <!-- Mobile: único hamburger para abrir sidebar SellerKit -->
+  <button class="hub-toggle" id="hub-toggle" onclick="toggleSidebar()" aria-label="Abrir menu">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
+
+  <!-- Identidade da ferramenta -->
+  <div class="mc-tool-id">
+    <div class="mc-tool-icon">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--green-mid)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="7" x2="16" y2="7"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="8" y1="17" x2="12" y2="17"/></svg>
+    </div>
+    <div>
+      <span class="mc-tool-name">Margem Certa</span>
+      <span class="mc-tool-sub" id="header-sub">Calcule o lucro real de cada produto</span>
+    </div>
+  </div>
+
+  <!-- Área direita: só trial chip + upgrade CTA -->
+  <div class="mc-topbar-right">
+    <div class="topbar-trial" id="topbar-trial">
+      <div class="topbar-trial-dot"></div>
+      <span id="topbar-trial-text">Trial ativo</span>
+    </div>
+    <button class="btn-assinar-top" id="btn-assinar-top" onclick="assinarPro()">Assinar Pro →</button>
+  </div>
+
+  <!-- elementos ocultos para compatibilidade com JS -->
+  <span id="nav-plano" style="display:none"></span>
+  <span id="nav-email" style="display:none"></span>
+  <button id="nav-portal" style="display:none" onclick="abrirPortal()"></button>
+</header>
 
 <main>
-  <!-- TRIAL BANNER -->
+
+  <!-- Full-width banners -->
   <div class="trial-banner" id="trial-banner">
     <div class="trial-banner-top">
       <div class="trial-banner-icon" id="trial-banner-icon">🎁</div>
@@ -555,49 +815,6 @@ footer{padding:20px;border-top:1px solid var(--border);text-align:center;font-si
     </div>
     <button class="trial-banner-close" onclick="document.getElementById('trial-banner').style.display='none'" aria-label="Fechar">✕</button>
   </div>
-  <!-- HEADER -->
-  <div class="page-header">
-    <h1>Minha Cartela</h1>
-    <p id="header-sub">Carregando...</p>
-  </div>
-
-  <!-- STATS -->
-  <div class="stats-grid" id="stats-grid" style="display:none;">
-
-    <!-- Margem média — foco, borda colorida dinâmica -->
-    <div class="stat-card stat-margem-card healthy" id="stat-margem-card">
-      <div class="stat-label">Margem média</div>
-      <div class="stat-value" id="stat-margem">—</div>
-      <div class="stat-health healthy" id="stat-margem-health">—</div>
-    </div>
-
-    <!-- Cartela -->
-    <div class="stat-card">
-      <div class="stat-label">Produtos</div>
-      <div class="stat-value" id="stat-total">0</div>
-      <div class="stat-pills">
-        <span class="stat-pill green"><span id="stat-lucro">0</span> lucro</span>
-        <span class="stat-pill red"><span id="stat-prejuizo">0</span> risco</span>
-      </div>
-    </div>
-
-    <!-- Melhor produto -->
-    <div class="stat-card stat-card-green">
-      <div class="stat-label">Melhor produto</div>
-      <div class="stat-value green" id="stat-melhor-margem">—</div>
-      <div class="stat-sub" id="stat-melhor-nome">—</div>
-    </div>
-
-    <!-- Pior produto -->
-    <div class="stat-card stat-card-red">
-      <div class="stat-label">Pior produto</div>
-      <div class="stat-value red" id="stat-pior-margem">—</div>
-      <div class="stat-sub" id="stat-pior-nome">—</div>
-    </div>
-
-  </div>
-
-  <!-- BANNER PRO (só aparece no gratuito) -->
   <div class="pro-banner" id="pro-banner" style="display:none;">
     <div class="pro-banner-text">
       <h3>Salve produtos, importe do Mercado Livre e monitore sua cartela</h3>
@@ -606,23 +823,24 @@ footer{padding:20px;border-top:1px solid var(--border);text-align:center;font-si
     <button class="pro-banner-btn" onclick="assinarPro()">Assinar Pro →</button>
   </div>
 
-  <div class="app-grid">
+  <!-- 2-column grid -->
+  <div class="tool-grid">
 
-    <!-- CALCULADORA -->
-    <div>
-      <hr class="section-divider">
-      <div class="section-header">
-        <div class="section-header-icon">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="7" x2="16" y2="7"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="8" y1="17" x2="12" y2="17"/></svg>
+    <!-- LEFT: Calculator (sticky) -->
+    <div class="tool-col-left">
+      <!-- HISTÓRICO DA SESSÃO -->
+      <div class="historico" id="historico-sessao">
+        <div class="historico-header">
+          <span class="historico-title">Histórico da sessão</span>
+          <span class="historico-aviso">Some ao fechar a aba</span>
         </div>
-        <div>
-          <div class="section-title">Calculadora</div>
-          <div class="section-subtitle">Lucro real, margem e ponto de equilíbrio</div>
-        </div>
+        <div id="historico-lista"></div>
+        <div class="historico-cta" id="historico-cta" onclick="abrirUpgrade()" style="display:none">Salvar tudo no Pro — não perca esse trabalho →</div>
       </div>
+
       <div class="calc-card">
         <div class="calc-header">
-          <div class="calc-header-icon" id="calc-header-icon">🧮</div>
+          <div class="calc-header-icon" id="calc-header-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="3"/><line x1="8" y1="7" x2="16" y2="7"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="8" y1="17" x2="11" y2="17"/></svg></div>
           <strong id="calc-header-title">Calcular lucro real</strong>
         </div>
         <div class="calc-body">
@@ -725,31 +943,11 @@ footer{padding:20px;border-top:1px solid var(--border);text-align:center;font-si
               <div class="bk-row"><span class="k">Custo do produto</span><span class="v neg" id="r-custo">—</span></div>
             </div>
             <div class="bk-min" id="bk-preco-min">
-              <span>Mínimo p/ 15% de margem</span>
-              <strong id="r-preco-min">—</strong>
-            </div>
-          </div>
-
-          <!-- SIMULADOR DE PROMOÇÃO -->
-          <div class="simulador" id="simulador">
-            <div class="sim-header">
-              <span>🏷️ Simular promoção</span>
-              <span class="sim-pro-tag">PRO</span>
-            </div>
-            <div id="sim-form">
-              <div class="sim-input-row">
-                <div class="sim-input-wrap">
-                  <input type="number" id="sim-desconto" class="sim-input" min="1" max="99" placeholder="ex: 15">
-                  <span>% off</span>
-                </div>
-                <button class="sim-btn" onclick="simularPromocao()">Simular</button>
+              <div class="bk-min-label">
+                <span>Preço mínimo para lucrar 15%</span>
+                <small>Cobrar abaixo disso reduz sua margem</small>
               </div>
-              <div class="sim-erro" id="sim-erro"></div>
-              <div class="sim-resultado" id="sim-resultado"></div>
-            </div>
-            <div class="sim-lock" id="sim-lock">
-              <span>🔒 Disponível no plano Pro</span>
-              <button onclick="abrirUpgrade()">Assinar →</button>
+              <strong id="r-preco-min">—</strong>
             </div>
           </div>
 
@@ -761,211 +959,231 @@ footer{padding:20px;border-top:1px solid var(--border);text-align:center;font-si
           </div>
         </div>
       </div>
+
     </div>
 
-    <!-- LISTA DE PRODUTOS -->
-    <div id="produtos-section">
-      <hr class="section-divider">
-      <div class="produtos-header">
-        <div class="produtos-header-row1">
-          <div style="display:flex;align-items:center;gap:10px;">
-            <div class="section-header-icon">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="4" rx="1"/><rect x="2" y="10" width="20" height="4" rx="1"/><rect x="2" y="17" width="20" height="4" rx="1"/></svg>
-            </div>
-            <div class="section-title">Produtos salvos</div>
-          </div>
-          <select class="sort-select" id="sort-produtos" onchange="onSortChange()">
-            <option value="margem-asc">Margem ↑</option>
-            <option value="margem-desc">Margem ↓</option>
-            <option value="nome-asc">Nome A→Z</option>
-            <option value="preco-desc">Preço ↓</option>
-            <option value="preco-asc">Preço ↑</option>
-            <option value="recente">Mais recente</option>
-          </select>
+    <!-- RIGHT: Stats + Products -->
+    <div class="tool-col-right">
+      <div class="stats-grid" id="stats-grid" style="display:none;">
+        <div class="stat-card stat-margem-card healthy" id="stat-margem-card">
+          <div class="stat-label">Margem média</div>
+          <div class="stat-value" id="stat-margem">—</div>
+          <div class="stat-health healthy" id="stat-margem-health">—</div>
         </div>
-        <div class="produtos-header-row2">
-          <button class="lote-btn" id="lote-btn" onclick="toggleLotePanel()">+ Importar em lote</button>
-          <button class="ml-btn" id="ml-btn" onclick="toggleMLPanel()">🛒 Importar do Mercado Livre</button>
-        </div>
-      </div>
-      <div id="produtos-count-row" style="display:none;margin:-8px 0 14px;"><span class="produtos-count" id="produtos-count"></span></div>
-
-      <!-- PAINEL IMPORTAÇÃO EM LOTE -->
-      <div class="lote-painel" id="lote-painel">
-        <div class="lote-painel-title">Importar produtos em lote</div>
-        <div class="lote-painel-sub">Cole os dados direto do Excel ou Google Sheets.<br>Formato: <strong>nome | preço de venda | custo do produto</strong> — uma linha por produto. Máximo 25.</div>
-
-        <div class="lote-config">
-          <div class="field">
-            <label>Categoria</label>
-            <div class="select-wrap">
-              <select id="lote-categoria">
-                <option value="0.11">Eletrônicos</option>
-                <option value="0.13" selected>Moda e vestuário</option>
-                <option value="0.14">Casa e decoração</option>
-                <option value="0.16">Beleza e cuidado</option>
-                <option value="0.18">Outros</option>
-              </select>
-            </div>
-          </div>
-          <div class="field">
-            <label>Envio</label>
-            <div class="select-wrap">
-              <select id="lote-envio">
-                <option value="0">Próprio</option>
-                <option value="12" selected>Full Pequeno</option>
-                <option value="18">Full Médio</option>
-                <option value="28">Full Grande</option>
-              </select>
-            </div>
-          </div>
-          <div class="field">
-            <label>Tributação</label>
-            <div class="select-wrap">
-              <select id="lote-imposto">
-                <option value="0.06" selected>MEI</option>
-                <option value="0.085">Simples Nacional</option>
-                <option value="0.114">Lucro Presumido</option>
-              </select>
-            </div>
-          </div>
-          <div class="field">
-            <label>Antecipação MP</label>
-            <div class="antecip-panel-wrap">
-              <input type="number" id="lote-antecip" class="antecip-rate-input" value="0" min="0" max="10" step="0.01" inputmode="decimal">
-              <span class="antecip-rate-pct">%</span>
-            </div>
+        <div class="stat-card">
+          <div class="stat-label">Produtos</div>
+          <div class="stat-value" id="stat-total">0</div>
+          <div class="stat-pills">
+            <span class="stat-pill green"><span id="stat-lucro">0</span> lucro</span>
+            <span class="stat-pill red"><span id="stat-prejuizo">0</span> risco</span>
           </div>
         </div>
-
-        <div class="lote-file-row">
-          <label class="lote-file-btn" for="lote-file-input">📎 Subir CSV ou Excel</label>
-          <input type="file" id="lote-file-input" accept=".csv,.xlsx,.xls" style="display:none" onchange="loteArquivo(this)">
-          <button class="lote-manual-toggle" id="lote-manual-toggle" onclick="toggleLoteManual()">✏️ Digitar manualmente</button>
+        <div class="stat-card stat-card-green">
+          <div class="stat-label">Melhor produto</div>
+          <div class="stat-value green" id="stat-melhor-margem">—</div>
+          <div class="stat-sub" id="stat-melhor-nome">—</div>
         </div>
-        <div class="lote-manual-section" id="lote-manual-section">
-          <textarea class="lote-textarea" id="lote-textarea" placeholder="Creme hidratante 200ml	89,90	35,00&#10;Nécessaire viagem	49,90	18,00&#10;Kit skincare premium	199,90	75,00"></textarea>
-          <div class="lote-textarea-hint">Dica: copie direto do Excel/Sheets — colunas separadas por Tab são reconhecidas automaticamente.</div>
-          <button class="lote-parse-btn" onclick="parseLote()">Calcular margens →</button>
-        </div>
-        <div class="lote-erro-parse" id="lote-erro-parse"></div>
-
-        <!-- PREVIEW -->
-        <div class="lote-preview" id="lote-preview">
-          <div class="lote-preview-header">
-            <h4 id="lote-preview-titulo">0 produtos</h4>
-            <div class="lote-preview-actions">
-              <button class="lote-sel-all" onclick="loteSelectAll(true)">Selecionar todos</button>
-              <button class="lote-sel-all" onclick="loteSelectAll(false)">Desmarcar todos</button>
-              <button class="lote-save-btn" id="lote-save-btn" onclick="salvarLote()" disabled>Salvar selecionados (0)</button>
-            </div>
-          </div>
-          <div style="overflow-x:auto;">
-            <table class="lote-table">
-              <thead>
-                <tr>
-                  <th style="width:32px;"></th>
-                  <th>Nome</th>
-                  <th>Preço</th>
-                  <th>Custo</th>
-                  <th>Margem</th>
-                  <th>Lucro/un.</th>
-                </tr>
-              </thead>
-              <tbody id="lote-tbody"></tbody>
-            </table>
-          </div>
+        <div class="stat-card stat-card-red">
+          <div class="stat-label">Pior produto</div>
+          <div class="stat-value red" id="stat-pior-margem">—</div>
+          <div class="stat-sub" id="stat-pior-nome">—</div>
         </div>
       </div>
 
-      <!-- PAINEL IMPORTAÇÃO DO ML -->
-      <div class="ml-painel" id="ml-painel">
-        <div class="ml-painel-title">🛒 Importar do Mercado Livre</div>
-        <div class="ml-painel-sub">Busque seus anúncios (ativos e pausados), informe o custo de cada produto e importe direto para sua cartela.</div>
-        <div class="ml-status-bar" id="ml-status-bar"></div>
-        <div class="ml-connect-area" id="ml-connect-area" style="display:none">
-          <button class="ml-connect-btn" id="ml-connect-btn" onclick="conectarML()">🔗 Conectar Mercado Livre</button>
-          <div class="ml-connect-sub">Você será redirecionado para o Mercado Livre para autorizar o acesso.</div>
+      <div id="produtos-section">
+        <div class="produtos-header">
+          <div class="produtos-header-row1">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div class="section-header-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="4" rx="1"/><rect x="2" y="10" width="20" height="4" rx="1"/><rect x="2" y="17" width="20" height="4" rx="1"/></svg>
+              </div>
+              <div class="section-title">Minha Cartela</div>
+            </div>
+            <select class="sort-select" id="sort-produtos" onchange="onSortChange()">
+              <option value="margem-asc">Margem — maior</option>
+              <option value="margem-desc">Margem — menor</option>
+              <option value="nome-asc">Nome A–Z</option>
+              <option value="preco-desc">Preço — maior</option>
+              <option value="preco-asc">Preço — menor</option>
+              <option value="recente">Mais recente</option>
+            </select>
+          </div>
+          <div class="produtos-header-row2">
+            <button class="lote-btn" id="lote-btn" onclick="toggleLotePanel()">+ Importar em lote</button>
+            <button class="ml-btn" id="ml-btn" onclick="toggleMLPanel()"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg> Importar do Mercado Livre</button>
+          </div>
         </div>
-        <div id="ml-form" style="display:none">
-          <div class="lote-config" style="margin-bottom:12px">
+        <div id="produtos-count-row" style="display:none;margin:-8px 0 14px;"><span class="produtos-count" id="produtos-count"></span></div>
+
+        <!-- PAINEL IMPORTAÇÃO EM LOTE -->
+        <div class="lote-painel" id="lote-painel">
+          <div class="lote-painel-title">Importar produtos em lote</div>
+          <div class="lote-painel-sub">Cole os dados direto do Excel ou Google Sheets.<br>Formato: <strong>nome | preço de venda | custo do produto</strong> — uma linha por produto. Máximo 25.</div>
+
+          <div class="lote-config">
             <div class="field">
               <label>Categoria</label>
-              <div class="select-wrap"><select id="ml-categoria">
-                <option value="0.11">Eletrônicos</option>
-                <option value="0.13" selected>Moda e vestuário</option>
-                <option value="0.14">Casa e decoração</option>
-                <option value="0.16">Beleza e cuidado</option>
-                <option value="0.18">Outros</option>
-              </select></div>
+              <div class="select-wrap">
+                <select id="lote-categoria">
+                  <option value="0.11">Eletrônicos</option>
+                  <option value="0.13" selected>Moda e vestuário</option>
+                  <option value="0.14">Casa e decoração</option>
+                  <option value="0.16">Beleza e cuidado</option>
+                  <option value="0.18">Outros</option>
+                </select>
+              </div>
             </div>
             <div class="field">
               <label>Envio</label>
-              <div class="select-wrap"><select id="ml-envio">
-                <option value="0">Próprio</option>
-                <option value="12" selected>Full Pequeno</option>
-                <option value="18">Full Médio</option>
-                <option value="28">Full Grande</option>
-              </select></div>
+              <div class="select-wrap">
+                <select id="lote-envio">
+                  <option value="0">Próprio</option>
+                  <option value="12" selected>Full Pequeno</option>
+                  <option value="18">Full Médio</option>
+                  <option value="28">Full Grande</option>
+                </select>
+              </div>
             </div>
             <div class="field">
               <label>Tributação</label>
-              <div class="select-wrap"><select id="ml-imposto">
-                <option value="0.06" selected>MEI</option>
-                <option value="0.085">Simples Nacional</option>
-                <option value="0.114">Lucro Presumido</option>
-              </select></div>
+              <div class="select-wrap">
+                <select id="lote-imposto">
+                  <option value="0.06" selected>MEI</option>
+                  <option value="0.085">Simples Nacional</option>
+                  <option value="0.114">Lucro Presumido</option>
+                </select>
+              </div>
             </div>
             <div class="field">
               <label>Antecipação MP</label>
               <div class="antecip-panel-wrap">
-                <input type="number" id="ml-antecip" class="antecip-rate-input" value="0" min="0" max="10" step="0.01" inputmode="decimal">
+                <input type="number" id="lote-antecip" class="antecip-rate-input" value="0" min="0" max="10" step="0.01" inputmode="decimal">
                 <span class="antecip-rate-pct">%</span>
               </div>
             </div>
           </div>
-          <button class="lote-parse-btn" id="ml-buscar-btn" onclick="carregarAnunciosML()" style="margin-bottom:12px">Buscar anúncios →</button>
-          <div class="lote-preview" id="ml-preview" style="display:none">
+
+          <div class="lote-file-row">
+            <label class="lote-file-btn" for="lote-file-input">📎 Subir CSV ou Excel</label>
+            <input type="file" id="lote-file-input" accept=".csv,.xlsx,.xls" style="display:none" onchange="loteArquivo(this)">
+            <button class="lote-manual-toggle" id="lote-manual-toggle" onclick="toggleLoteManual()">✏️ Digitar manualmente</button>
+          </div>
+          <div class="lote-manual-section" id="lote-manual-section">
+            <textarea class="lote-textarea" id="lote-textarea" placeholder="Creme hidratante 200ml	89,90	35,00&#10;Nécessaire viagem	49,90	18,00&#10;Kit skincare premium	199,90	75,00"></textarea>
+            <div class="lote-textarea-hint">Dica: copie direto do Excel/Sheets — colunas separadas por Tab são reconhecidas automaticamente.</div>
+            <button class="lote-parse-btn" onclick="parseLote()">Calcular margens →</button>
+          </div>
+          <div class="lote-erro-parse" id="lote-erro-parse"></div>
+
+          <!-- PREVIEW -->
+          <div class="lote-preview" id="lote-preview">
             <div class="lote-preview-header">
-              <h4 id="ml-preview-titulo">0 anúncios</h4>
+              <h4 id="lote-preview-titulo">0 produtos</h4>
               <div class="lote-preview-actions">
-                <button class="lote-sel-all" onclick="mlSelectAll(true)">Selecionar todos</button>
-                <button class="lote-sel-all" onclick="mlSelectAll(false)">Desmarcar todos</button>
-                <button class="ml-importar-btn" id="ml-importar-btn" onclick="importarAnunciosML()" disabled>Importar selecionados</button>
+                <button class="lote-sel-all" onclick="loteSelectAll(true)">Selecionar todos</button>
+                <button class="lote-sel-all" onclick="loteSelectAll(false)">Desmarcar todos</button>
+                <button class="lote-save-btn" id="lote-save-btn" onclick="salvarLote()" disabled>Salvar selecionados (0)</button>
               </div>
             </div>
-            <div style="overflow-x:auto">
+            <div style="overflow-x:auto;">
               <table class="lote-table">
-                <thead><tr><th style="width:32px"></th><th style="width:44px"></th><th>Nome</th><th>Preço venda</th><th>Custo (R$)</th><th>Margem</th></tr></thead>
-                <tbody id="ml-tbody"></tbody>
+                <thead>
+                  <tr>
+                    <th style="width:32px;"></th>
+                    <th>Nome</th>
+                    <th>Preço</th>
+                    <th>Custo</th>
+                    <th>Margem</th>
+                    <th>Lucro/un.</th>
+                  </tr>
+                </thead>
+                <tbody id="lote-tbody"></tbody>
               </table>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- HISTÓRICO DA SESSÃO -->
-      <div class="historico" id="historico-sessao">
-        <div class="historico-header">
-          <span class="historico-title">🕐 Histórico da sessão</span>
-          <span class="historico-aviso">Some ao fechar a aba</span>
+        <!-- PAINEL IMPORTAÇÃO DO ML -->
+        <div class="ml-painel" id="ml-painel">
+          <div class="ml-painel-title">🛒 Importar do Mercado Livre</div>
+          <div class="ml-painel-sub">Busque seus anúncios (ativos e pausados), informe o custo de cada produto e importe direto para sua cartela.</div>
+          <div class="ml-status-bar" id="ml-status-bar"></div>
+          <div class="ml-connect-area" id="ml-connect-area" style="display:none">
+            <button class="ml-connect-btn" id="ml-connect-btn" onclick="conectarML()">🔗 Conectar Mercado Livre</button>
+            <div class="ml-connect-sub">Você será redirecionado para o Mercado Livre para autorizar o acesso.</div>
+          </div>
+          <div id="ml-form" style="display:none">
+            <div class="lote-config" style="margin-bottom:12px">
+              <div class="field">
+                <label>Categoria</label>
+                <div class="select-wrap"><select id="ml-categoria">
+                  <option value="0.11">Eletrônicos</option>
+                  <option value="0.13" selected>Moda e vestuário</option>
+                  <option value="0.14">Casa e decoração</option>
+                  <option value="0.16">Beleza e cuidado</option>
+                  <option value="0.18">Outros</option>
+                </select></div>
+              </div>
+              <div class="field">
+                <label>Envio</label>
+                <div class="select-wrap"><select id="ml-envio">
+                  <option value="0">Próprio</option>
+                  <option value="12" selected>Full Pequeno</option>
+                  <option value="18">Full Médio</option>
+                  <option value="28">Full Grande</option>
+                </select></div>
+              </div>
+              <div class="field">
+                <label>Tributação</label>
+                <div class="select-wrap"><select id="ml-imposto">
+                  <option value="0.06" selected>MEI</option>
+                  <option value="0.085">Simples Nacional</option>
+                  <option value="0.114">Lucro Presumido</option>
+                </select></div>
+              </div>
+              <div class="field">
+                <label>Antecipação MP</label>
+                <div class="antecip-panel-wrap">
+                  <input type="number" id="ml-antecip" class="antecip-rate-input" value="0" min="0" max="10" step="0.01" inputmode="decimal">
+                  <span class="antecip-rate-pct">%</span>
+                </div>
+              </div>
+            </div>
+            <button class="lote-parse-btn" id="ml-buscar-btn" onclick="carregarAnunciosML()" style="margin-bottom:12px">Buscar anúncios →</button>
+            <div class="lote-preview" id="ml-preview" style="display:none">
+              <div class="lote-preview-header">
+                <h4 id="ml-preview-titulo">0 anúncios</h4>
+                <div class="lote-preview-actions">
+                  <button class="lote-sel-all" onclick="mlSelectAll(true)">Selecionar todos</button>
+                  <button class="lote-sel-all" onclick="mlSelectAll(false)">Desmarcar todos</button>
+                  <button class="ml-importar-btn" id="ml-importar-btn" onclick="importarAnunciosML()" disabled>Importar selecionados</button>
+                </div>
+              </div>
+              <div style="overflow-x:auto">
+                <table class="lote-table">
+                  <thead><tr><th style="width:32px"></th><th style="width:44px"></th><th>Nome</th><th>Preço venda</th><th>Custo (R$)</th><th>Margem</th></tr></thead>
+                  <tbody id="ml-tbody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
         </div>
-        <div id="historico-lista"></div>
-        <div class="historico-cta" id="historico-cta" onclick="abrirUpgrade()" style="display:none">Salvar tudo no Pro — não perca esse trabalho →</div>
-      </div>
 
-      <div id="produtos-lista">
-        <div class="loading">Carregando...</div>
+        <div id="produtos-lista">
+          <div class="loading">Carregando...</div>
+        </div>
       </div>
     </div>
 
   </div>
+
+  <footer>Seller<strong style="color:var(--accent)">Kit</strong> · Margem<strong style="color:var(--accent)">Certa</strong> · Feito para vendedores 🇧🇷 · <a href="/privacidade" style="color:var(--muted);text-decoration:none;">Privacidade</a> · <a href="/termos" style="color:var(--muted);text-decoration:none;">Termos</a></footer>
 </main>
 
 <!-- MODAL UPGRADE -->
 <div class="upgrade-overlay" id="upgrade-overlay" onclick="fecharUpgrade(event)">
   <div class="upgrade-modal">
-    <div class="upgrade-modal-icon">🚀</div>
+    <div class="upgrade-modal-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
     <h3>Salve esse produto no Pro</h3>
     <div class="upgrade-modal-sub">Você calculou a margem — agora salve e monitore. Com o Pro você nunca mais perde o controle da sua cartela.</div>
     <ul class="upgrade-benefits">
@@ -979,8 +1197,6 @@ footer{padding:20px;border-top:1px solid var(--border);text-align:center;font-si
     <button class="upgrade-close" onclick="fecharUpgrade()">Agora não</button>
   </div>
 </div>
-
-<footer>Margem<strong style="color:var(--green)">Certa</strong> · Feito para vendedores 🇧🇷 · <a href="/privacidade" style="color:var(--muted);text-decoration:none;">Privacidade</a> · <a href="/termos" style="color:var(--muted);text-decoration:none;">Termos</a></footer>
 
 <div class="toast" id="toast"></div>
 
@@ -1062,6 +1278,10 @@ async function carregarPerfil(token) {
     const emTrial = currentPerfil.em_trial || false
     const trialExpiresAt = currentPerfil.trial_expires_at
 
+    // Compute display name early (used in multiple places below)
+    const rawName = currentUser?.user_metadata?.full_name || currentUser?.user_metadata?.name || ''
+    const displayName = rawName.trim() ? rawName.trim().split(' ')[0] : ''
+
     // Banner de trial
     if (emTrial && trialExpiresAt) {
       const diasRestantes = Math.floor((new Date(trialExpiresAt) - new Date()) / 864e5)
@@ -1072,20 +1292,28 @@ async function carregarPerfil(token) {
       if (diasRestantes <= 1) {
         banner.className = 'trial-banner danger'
         icon.textContent = '⚠️'
-        titulo.textContent = 'Último dia do seu Pro grátis'
+        titulo.textContent = (displayName ? `Último dia, ${displayName}!` : 'Último dia do seu Pro grátis')
         days.innerHTML = '<strong>Assine hoje</strong> para não perder o acesso à sua cartela.'
       } else if (diasRestantes <= 3) {
         banner.className = 'trial-banner warning'
         icon.textContent = '⏳'
-        titulo.textContent = `Seu Pro grátis termina em ${diasRestantes} dias`
+        titulo.textContent = `${displayName ? displayName + ', seu' : 'Seu'} Pro grátis termina em ${diasRestantes} dias`
         days.innerHTML = 'Assine antes de perder o acesso aos seus produtos salvos.'
       } else {
         banner.className = 'trial-banner'
         icon.textContent = '🎁'
-        titulo.textContent = 'Você ganhou 7 dias de Pro completo'
+        titulo.textContent = (displayName ? `Olá, ${displayName}! Você ganhou 7 dias de Pro.` : 'Você ganhou 7 dias de Pro completo')
         days.innerHTML = `<strong>${diasRestantes} dias restantes</strong> — aproveite tudo sem limitações.`
       }
       banner.style.display = 'flex'
+
+      // Topbar trial chip
+      const topbarTrial = document.getElementById('topbar-trial')
+      const topbarTrialText = document.getElementById('topbar-trial-text')
+      if (topbarTrial && topbarTrialText) {
+        topbarTrialText.textContent = diasRestantes <= 1 ? 'Último dia!' : `${diasRestantes}d de trial`
+        topbarTrial.classList.add('show')
+      }
     }
 
     const navPlano = document.getElementById('nav-plano')
@@ -1094,7 +1322,7 @@ async function carregarPerfil(token) {
     navPlano.style.visibility = 'visible'
 
     document.getElementById('header-sub').textContent = plano === 'pro'
-      ? 'Calcule e salve os produtos da sua cartela.'
+      ? (displayName ? `Olá, ${displayName}! Calcule e salve os produtos da sua cartela.` : 'Calcule e salve os produtos da sua cartela.')
       : 'Calcule a margem dos seus produtos. Assine o Pro para salvar.'
 
     // Botões de importação visíveis para todos (gratuito vê aviso ao clicar)
@@ -1103,6 +1331,8 @@ async function carregarPerfil(token) {
 
     if (plano !== 'pro') {
       document.getElementById('pro-banner').style.display = 'flex'
+      const assBtnTop = document.getElementById('btn-assinar-top')
+      if (assBtnTop && !emTrial) assBtnTop.classList.add('show')
     } else {
       document.getElementById('nav-portal').style.display = 'block'
       carregarStatusML(token)
@@ -1111,13 +1341,15 @@ async function carregarPerfil(token) {
     // Mobile menu sync
     const email = currentUser ? currentUser.email : (currentPerfil.email || '')
     const mobEmail = document.getElementById('nav-mob-email')
+    const mobName = document.getElementById('nav-mob-name')
     const mobPlano = document.getElementById('nav-mob-plano')
     const mobPortal = document.getElementById('nav-mob-portal')
     const mobAssinar = document.getElementById('nav-mob-assinar')
     const mobML = document.getElementById('nav-mob-ml')
     if (mobEmail) mobEmail.textContent = email || ''
+    if (mobName) mobName.textContent = displayName || ''
     const mobAvatar = document.getElementById('nav-mob-avatar')
-    if (mobAvatar && email) mobAvatar.textContent = email.charAt(0).toUpperCase()
+    if (mobAvatar) mobAvatar.textContent = (displayName || email).charAt(0).toUpperCase()
     if (mobPlano) { mobPlano.className = 'nav-plano ' + (plano === 'pro' ? 'pro' : 'gratuito'); mobPlano.textContent = plano === 'pro' ? 'Pro ✓' : 'Gratuito'; mobPlano.style.visibility = 'visible' }
     if (plano === 'pro') {
       if (mobPortal) mobPortal.style.display = 'flex'
@@ -1458,7 +1690,7 @@ function renderProdutos(produtos) {
   let healthStatus, healthMsg
   if (margemMedia >= 20 && pctLucro >= 0.8) {
     healthStatus = 'healthy'
-    healthMsg = '✓ Tem gordura pra promoção, frete e devolução'
+    healthMsg = 'Tem gordura pra promoção, frete e devolução'
   } else if (margemMedia >= 20) {
     healthStatus = 'warning'
     healthMsg = '⚠ Boa margem, mas ' + comPrejuizo + ' produto' + (comPrejuizo !== 1 ? 's' : '') + ' no risco'
@@ -1470,7 +1702,7 @@ function renderProdutos(produtos) {
     healthMsg = '✕ Qualquer reajuste de custo te joga no prejuízo'
   }
   document.getElementById('stat-margem-card').className = `stat-card stat-margem-card ${healthStatus}`
-  document.getElementById('stat-margem').textContent = margemMedia.toFixed(1) + '%'
+  document.getElementById('stat-margem').textContent = margemMedia.toFixed(1).replace('.', ',') + '%'
   const healthEl = document.getElementById('stat-margem-health')
   healthEl.textContent = healthMsg
   healthEl.className = `stat-health ${healthStatus}`
@@ -1478,10 +1710,11 @@ function renderProdutos(produtos) {
   document.getElementById('stat-total').textContent = total
   document.getElementById('stat-lucro').textContent = comLucro
   document.getElementById('stat-prejuizo').textContent = comPrejuizo
+  document.getElementById('stat-prejuizo').closest('.stat-pill').className = 'stat-pill ' + (comPrejuizo > 0 ? 'red' : 'neutral')
   // Melhor / pior produto
-  document.getElementById('stat-melhor-margem').textContent = melhor.margem.toFixed(1) + '%'
+  document.getElementById('stat-melhor-margem').textContent = melhor.margem.toFixed(1).replace('.', ',') + '%'
   document.getElementById('stat-melhor-nome').textContent = melhor.nome
-  document.getElementById('stat-pior-margem').textContent = pior.margem.toFixed(1) + '%'
+  document.getElementById('stat-pior-margem').textContent = pior.margem.toFixed(1).replace('.', ',') + '%'
   document.getElementById('stat-pior-nome').textContent = pior.nome
   count.textContent = `${total} produto${total !== 1 ? 's' : ''}`
   document.getElementById('produtos-count-row').style.display = 'block'
@@ -1491,22 +1724,43 @@ function renderProdutos(produtos) {
   const sorted = sortProdutos(produtos)
 
   lista.innerHTML = sorted.map(p => `
-    <div class="produto-card${p.lucro < 0 ? ' danger' : ''}" id="card-${p.id}">
-      <div style="flex:1;min-width:0;">
+    <div class="produto-card${p.lucro < 0 ? ' danger' : ' profit-card'}" id="card-${p.id}">
+      <div class="produto-info">
         <div class="produto-nome">${escapeHtml(p.nome)}</div>
         <div class="produto-meta">R$\u00A0${p.preco_venda.toFixed(2).replace('.',',')} · custo R$\u00A0${p.custo_produto.toFixed(2).replace('.',',')}</div>
       </div>
-      ${p.lucro < 0 ? '<span class="produto-danger-icon" title="Produto no prejuízo">⚠️</span>' : ''}
-      <div class="produto-margem">
-        <div class="produto-margem-valor ${p.lucro >= 0 ? 'profit' : 'loss'}">${p.margem.toFixed(1)}%</div>
+      <div class="produto-margem-wrap">
+        <div class="produto-margem-valor ${p.lucro >= 0 ? 'profit' : 'loss'}">${p.margem.toFixed(1).replace('.', ',')}%</div>
         <div class="produto-margem-label">${p.lucro >= 0 ? 'lucro' : 'prejuízo'}</div>
       </div>
-      <div class="card-menu-wrap">
-        <button class="card-menu-btn" onclick="toggleCardMenu(event,'${p.id}')" aria-label="Opções">⋯</button>
-        <div class="card-menu-dropdown" id="menu-${p.id}">
-          <button class="card-menu-item" onclick="closeCardMenus();editarProduto('${p.id}')">✎ Editar</button>
-          <button class="card-menu-item red" onclick="closeCardMenus();deletarProduto('${p.id}')">✕ Remover</button>
+      <div class="produto-actions">
+        <button class="prod-action-btn sim" id="sim-btn-${p.id}" onclick="toggleSimProduto('${p.id}')" title="Simular promoção">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+        </button>
+        <button class="prod-action-btn" onclick="editarProduto('${p.id}')" title="Editar produto">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        </button>
+        <button class="prod-action-btn del" onclick="deletarProduto('${p.id}')" title="Remover produto">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+        </button>
+      </div>
+      <div class="prod-sim-panel" id="sim-panel-${p.id}">
+        ${currentPerfil?.plano === 'pro' ? `
+        <div class="prod-sim-row">
+          <div class="prod-sim-wrap">
+            <input type="number" id="sim-input-${p.id}" class="prod-sim-input" min="1" max="99" placeholder="ex: 15"
+              onkeydown="if(event.key==='Enter') calcSimProduto('${p.id}')">
+            <span>% off</span>
+          </div>
+          <button class="prod-sim-calc-btn" onclick="calcSimProduto('${p.id}')">Calcular →</button>
         </div>
+        <div class="prod-sim-result" id="sim-result-${p.id}"></div>
+        ` : `
+        <div class="prod-sim-lock">
+          <span>🔒 Disponível no Pro</span>
+          <button onclick="assinarPro()">Assinar →</button>
+        </div>
+        `}
       </div>
     </div>
   `).join('')
@@ -1540,7 +1794,7 @@ function editarProduto(id) {
 
   const nome_curto = p.nome.length > 22 ? p.nome.slice(0, 22) + '…' : p.nome
   document.getElementById('calc-header-title').textContent = `Editando: ${nome_curto}`
-  document.getElementById('calc-header-icon').textContent = '✏️'
+  document.getElementById('calc-header-icon').innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>'
   document.querySelector('.calc-card').classList.add('edit-mode')
   document.getElementById('btn-salvar').textContent = 'Atualizar produto'
   document.getElementById('btn-salvar').disabled = false
@@ -1549,9 +1803,7 @@ function editarProduto(id) {
   calcular()
   setTimeout(() => {
     const el = document.querySelector('.calc-card')
-    const navH = document.querySelector('.nav')?.offsetHeight || 60
-    const y = el.getBoundingClientRect().top + window.scrollY - navH - 12
-    window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' })
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
   }, 80)
 }
 
@@ -1560,7 +1812,7 @@ function cancelarEdicao() {
   ultimoCalculo = null
   document.querySelectorAll('.produto-card.editing').forEach(el => el.classList.remove('editing'))
   document.getElementById('calc-header-title').textContent = 'Calcular lucro real'
-  document.getElementById('calc-header-icon').textContent = '🧮'
+  document.getElementById('calc-header-icon').innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="3"/><line x1="8" y1="7" x2="16" y2="7"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="8" y1="17" x2="11" y2="17"/></svg>'
   document.querySelector('.calc-card').classList.remove('edit-mode')
   document.getElementById('btn-salvar').textContent = 'Salvar produto'
   document.getElementById('btn-cancelar').style.display = 'none'
@@ -1571,10 +1823,6 @@ function cancelarEdicao() {
   document.getElementById('antecip-toggle').checked = false
   document.getElementById('antecip-pct-wrap').style.display = 'none'
   document.getElementById('resultado').classList.remove('show')
-  document.getElementById('simulador').classList.remove('show')
-  document.getElementById('sim-resultado').classList.remove('show')
-  document.getElementById('sim-erro').classList.remove('show')
-  document.getElementById('sim-desconto').value = ''
   document.getElementById('calc-pro-cta').classList.remove('show')
   hideCalcError()
 }
@@ -1637,26 +1885,26 @@ function calcular() {
   const ok        = lucro >= 0
 
   document.getElementById('r-preco').textContent    = fmt(preco)
-  document.getElementById('r-comissao').textContent = '- ' + fmt(comissao)
+  document.getElementById('r-comissao').textContent = '− ' + fmt(comissao)
   const rowTaxaFixa = document.getElementById('row-taxa-fixa')
   if (taxaFixa > 0) {
-    document.getElementById('r-taxa-fixa').textContent = '- ' + fmt(taxaFixa)
+    document.getElementById('r-taxa-fixa').textContent = '− ' + fmt(taxaFixa)
     rowTaxaFixa.style.display = ''
   } else {
     rowTaxaFixa.style.display = 'none'
   }
   const rowAntecip = document.getElementById('row-antecip')
   if (antecip > 0) {
-    document.getElementById('r-antecip').textContent = '- ' + fmt(antecip)
+    document.getElementById('r-antecip').textContent = '− ' + fmt(antecip)
     rowAntecip.style.display = ''
   } else {
     rowAntecip.style.display = 'none'
   }
-  document.getElementById('r-envio').textContent    = envio > 0 ? '- ' + fmt(envio) : 'R$ 0,00'
-  document.getElementById('r-imposto').textContent  = '- ' + fmt(imposto)
-  document.getElementById('r-custo').textContent    = '- ' + fmt(custo)
-  document.getElementById('r-lucro').textContent    = (ok ? '+' : '-') + ' R$\u00A0' + Math.abs(lucro).toFixed(2).replace('.', ',')
-  document.getElementById('r-margem').textContent   = 'Margem líquida: ' + margem + '%' + (!ok ? ' ⚠️' : '')
+  document.getElementById('r-envio').textContent    = envio > 0 ? '− ' + fmt(envio) : 'R$ 0,00'
+  document.getElementById('r-imposto').textContent  = '− ' + fmt(imposto)
+  document.getElementById('r-custo').textContent    = '− ' + fmt(custo)
+  document.getElementById('r-lucro').textContent    = (ok ? '+' : '−') + ' R$\u00A0' + Math.abs(lucro).toFixed(2).replace('.', ',')
+  document.getElementById('r-margem').textContent   = 'Margem líquida: ' + margem.replace('.', ',') + '%' + (!ok ? ' ⚠' : '')
   document.getElementById('result-total-box').className = 'result-total ' + (ok ? 'profit' : 'loss')
   document.getElementById('resultado').classList.add('show')
 
@@ -1666,19 +1914,6 @@ function calcular() {
   if (currentPerfil?.plano !== 'pro') {
     const nomeHistorico = document.getElementById('prod-nome').value.trim()
     adicionarHistorico(nomeHistorico, parseFloat(margem), parseFloat(lucro.toFixed(2)))
-  }
-
-  // Simulador de promoção — mostra e configura acesso por plano
-  const simEl = document.getElementById('simulador')
-  simEl.classList.add('show')
-  document.getElementById('sim-resultado').classList.remove('show')
-  document.getElementById('sim-desconto').value = ''
-  if (currentPerfil?.plano === 'pro') {
-    document.getElementById('sim-form').style.display = 'block'
-    document.getElementById('sim-lock').style.display = 'none'
-  } else {
-    document.getElementById('sim-form').style.display = 'none'
-    document.getElementById('sim-lock').style.display = 'block'
   }
 
   // Preço mínimo para 15% de margem
@@ -1801,6 +2036,7 @@ async function salvarProduto() {
       showToast('Produto atualizado com sucesso.')
       cancelarEdicao()
     } else {
+      showToast('✓ Produto salvo!')
       btn.textContent = 'Salvo ✓'
       setTimeout(() => { btn.textContent = 'Salvar produto'; btn.disabled = false }, 2000)
     }
@@ -2011,12 +2247,63 @@ function simularPromocao() {
   resEl.classList.add('show')
 }
 
-// ── MOBILE NAV ───────────────────────────────────────────
-function toggleNavMenu() {
-  const menu = document.getElementById('nav-mob-menu')
-  menu.classList.toggle('open')
-  document.body.style.overflow = menu.classList.contains('open') ? 'hidden' : ''
+
+// ── SIMULADOR POR PRODUTO ────────────────────────────────
+function toggleSimProduto(id) {
+  const panel = document.getElementById(`sim-panel-${id}`)
+  const btn   = document.getElementById(`sim-btn-${id}`)
+  if (!panel) return
+
+  const opening = !panel.classList.contains('show')
+
+  // Fecha qualquer outro painel aberto
+  document.querySelectorAll('.prod-sim-panel.show').forEach(el => {
+    const otherId = el.id.replace('sim-panel-', '')
+    el.classList.remove('show')
+    document.getElementById(`sim-btn-${otherId}`)?.classList.remove('active')
+  })
+
+  if (opening) {
+    panel.classList.add('show')
+    btn.classList.add('active')
+    setTimeout(() => document.getElementById(`sim-input-${id}`)?.focus(), 50)
+  }
 }
+
+function calcSimProduto(id) {
+  const p = produtosCache.find(x => x.id === id)
+  if (!p) return
+
+  const input    = document.getElementById(`sim-input-${id}`)
+  const resultEl = document.getElementById(`sim-result-${id}`)
+  const pct      = parseFloat(input.value.toString().replace(',', '.'))
+
+  if (!input.value || isNaN(pct) || pct <= 0 || pct >= 100) {
+    resultEl.innerHTML = '<div style="font-size:11px;color:var(--red);margin-top:2px;">Digite um desconto entre 1 e 99%.</div>'
+    resultEl.classList.add('show')
+    return
+  }
+
+  const fmt = v => 'R$ ' + Math.abs(v).toFixed(2).replace('.', ',')
+  const novoPreco  = p.preco_venda * (1 - pct / 100)
+  const taxaFixa   = novoPreco < 79 ? 6 : 0
+  const novoLucro  = novoPreco - (novoPreco * p.categoria) - taxaFixa - p.envio - (novoPreco * p.imposto) - p.custo_produto
+  const novaMargem = (novoLucro / novoPreco) * 100
+  const danger     = novoLucro < 0
+
+  resultEl.innerHTML = `
+    <div class="prod-sim-result-row"><span>Preço com desconto</span><strong>${fmt(novoPreco)}</strong></div>
+    <div class="prod-sim-result-row"><span>Novo lucro</span><strong class="${danger ? 'loss' : 'profit'}">${novoLucro >= 0 ? '+' : '−'} ${fmt(novoLucro)}</strong></div>
+    <div class="prod-sim-result-row"><span>Nova margem</span><strong class="${danger ? 'loss' : 'profit'}">${novaMargem.toFixed(1).replace('.', ',')}%</strong></div>
+    ${danger ? '<div class="prod-sim-alert">⚠️ Produto no prejuízo com esse desconto</div>' : ''}
+  `
+  resultEl.classList.add('show')
+}
+
+// ── MENU CONTA (ações ficam na sidebar — sem dropdown) ───
+function toggleNavMenu() {}
+function toggleUserMenu() {}
+function closeUserMenu() {}
 
 // ── LOGOUT ───────────────────────────────────────────────
 
@@ -2298,11 +2585,46 @@ if (savedSort) {
     if (ultimoCalculo) calcular()
   })
 })
-document.getElementById('sim-desconto').addEventListener('keydown', e => {
-  if (e.key === 'Enter') { e.preventDefault(); simularPromocao() }
-})
+
+// ── HUB SIDEBAR ──────────────────────────────────────────
+function toggleSidebar() {
+  const sidebar = document.getElementById('hub-sidebar')
+  const overlay = document.getElementById('hub-overlay')
+  const isOpen = sidebar.classList.contains('open')
+  sidebar.classList.toggle('open', !isOpen)
+  overlay.classList.toggle('open', !isOpen)
+  document.body.style.overflow = isOpen ? '' : 'hidden'
+}
+
+// Mirror user info from existing nav into sidebar
+;(function syncHubUser() {
+  const emailEl = document.getElementById('nav-mob-email')
+  const nameEl  = document.getElementById('nav-mob-name')
+  const planoEl = document.getElementById('nav-plano')
+
+  function update() {
+    const name  = nameEl  ? nameEl.textContent.trim()  : ''
+    const email = emailEl ? emailEl.textContent.trim() : ''
+    const plano = planoEl ? planoEl.textContent.trim() : ''
+    const display = name || email
+    if (display) {
+      document.getElementById('hub-email').textContent = display
+      document.getElementById('hub-avatar').textContent = (display[0] || '?').toUpperCase()
+    }
+    if (plano) document.getElementById('hub-plano').textContent = plano
+  }
+
+  update()
+  const obs = new MutationObserver(update)
+  if (emailEl) obs.observe(emailEl, { childList: true, subtree: true, characterData: true })
+  if (nameEl)  obs.observe(nameEl,  { childList: true, subtree: true, characterData: true })
+  if (planoEl) obs.observe(planoEl, { childList: true, subtree: true, characterData: true })
+})()
 </script>
 
 <script defer src="/_vercel/insights/script.js"></script>
+
+</div><!-- /hub-content -->
+</div><!-- /hub-wrapper -->
 </body>
 </html>
